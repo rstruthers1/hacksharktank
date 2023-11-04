@@ -28,7 +28,7 @@ export function App() {
     return (
         <div className="App">
             <header className="App-header">
-            <h1>My App - Test Deployment with Action</h1>
+            <h1>My Hack Tank App</h1>
             <div>
                 <h2>Users</h2>
                 <p>Users are fetched from the Node.js server that serves this app</p>
