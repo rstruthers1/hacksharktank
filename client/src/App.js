@@ -16,12 +16,32 @@ async function getUsers() {
     return users;
 }
 
+async function getMyVar() {
+    const baseURL = process.env.REACT_APP_API_URL || "";
+
+    console.log(`*** baseURL: ${baseURL}`)
+
+    const response = await fetch(`${baseURL}/myvar`);
+
+    if (!response.ok) {
+        throw new Error(await response.text());
+    }
+
+    return await response.json();
+
+
+}
+
 export function App() {
     const [users, setUsers] = useState([]);
+    const [myVar, setMyVar] = useState('');
 
     useEffect(() => {
         (async () => {
             setUsers(await getUsers());
+        })();
+        (async () => {
+            setMyVar(await getMyVar());
         })();
     }, []);
 
@@ -36,12 +56,16 @@ export function App() {
                     In the server the users is a .json file however, you would probably
                     swap this out for database connection in production!
                 </p>
+                <div>
+                    <h3>MY_VAR: {myVar?.MY_VAR}</h3>
+                </div>
                 {users.map((user) => (
                     <div key={user.name}>
                         <h3>{user.name}</h3>
                         <a target="_blank" style={{color: "white"}} href={user.website}>{user.website}</a>
                     </div>
                 ))}
+
             </div>
             </header>
         </div>
