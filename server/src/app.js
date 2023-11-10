@@ -2,7 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const expressStaticGzip = require("express-static-gzip");
 const path = require("path");
-require('dotenv').config();
+require('dotenv').config()
+const userRouter = require('./routes/userRouter')
+
 
 const STATIC_FOLDER = path.join(__dirname, "../", "../", "client/", "build/");
 const HTTP_PORT = Number(process.env.HTTP_PORT || 5000);
@@ -12,8 +14,12 @@ console.log(`*** myVar: ${myVar}`)
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.get("/users", (_, res) => res.json(require("./users.json")));
-app.get("/myvar",(_, res) => res.json({MY_VAR: myVar}) )
+
+
+app.use('/', userRouter)
+app.get("/myvar",(_, res) => res.json({MY_VAR: myVar}))
+
+
 app.use(expressStaticGzip(STATIC_FOLDER));
 app.get("*", expressStaticGzip(STATIC_FOLDER));
 app.use("*", expressStaticGzip(STATIC_FOLDER));

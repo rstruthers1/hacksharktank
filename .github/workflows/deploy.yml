@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MY_VAR: ${{ secrets.MY_VAR }}
+      DB_URL: ${{ secrets.DB_URL }}
     steps:
       - name: SSH and deploy node app
         uses: appleboy/ssh-action@master
@@ -17,7 +18,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          envs: MY_VAR
+          envs: MY_VAR, DB_URL
           script: |
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
