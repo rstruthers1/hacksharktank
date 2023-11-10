@@ -8,6 +8,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      MY_VAR: ${{ secrets.MY_VAR }}
     steps:
       - name: SSH and deploy node app
         uses: appleboy/ssh-action@master
