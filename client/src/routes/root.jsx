@@ -9,7 +9,7 @@ export default function Root() {
                     <Link to="/about">About</Link>
                 </div>
                 <div>
-                    <Link to="/signup">Signup</Link> | {' '}
+                    <Link to="/signup">Signup</Link> | {'  '}
                     <Link to="/login">Login</Link>
                 </div>
             </nav>
