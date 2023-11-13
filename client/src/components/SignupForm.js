@@ -8,7 +8,6 @@ import './SignupForm.css';
 const SignupForm = () => {
     // Define your validation schema using Yup
     const validationSchema = Yup.object().shape({
-        username: Yup.string().required('Username is required'),
         email: Yup.string().required('Email is required').email('Email is invalid'),
         password: Yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
         passwordConfirmation: Yup.string()
@@ -31,11 +30,6 @@ const SignupForm = () => {
         <div className="signupForm">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <h2>Sign Up</h2>
-                <div className="formField">
-                    <label htmlFor="username">Username</label>
-                    <input name="username" type="text" {...register('username')} />
-                    <p className="error">{errors.username?.message}</p>
-                </div>
                 <div className="formField">
                     <label htmlFor="email">Email</label>
                     <input name="email" type="email" {...register('email')} />

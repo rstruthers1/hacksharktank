@@ -18,7 +18,6 @@ passwordSchema
 
 // Middleware for validation
 const validateUserInput = [
-    body('username').trim().notEmpty().withMessage('Username is required'),
     body('email').isEmail().withMessage('Invalid email format'),
     body('password').custom(value => {
         if (!passwordSchema.validate(value)) {
@@ -39,17 +38,16 @@ userRouter.route('/users/').get(async (request, response, next) => {
 });
 
 userRouter.route('/users').post(async (req, res, next) => {
-    const { username, email, password, roles } = req.body; // assuming these are passed in the request
+    const { email, password, roles } = req.body; // assuming these are passed in the request
 
     try {
 
         const existingUser = await knex('user')
-            .where('username', username)
-            .orWhere('email', email)
+            .where('email', email)
             .first();
 
         if (existingUser) {
-            res.status(400).json({ success: false, message: "A user with the same username or email already exists." })
+            res.status(400).json({ success: false, message: "A user with the same email already exists." })
             return;
         }
 
@@ -70,7 +68,7 @@ userRouter.route('/users').post(async (req, res, next) => {
         let newUserId;
         await knex.transaction(async trx => {
             const [userId] = await trx('user').insert({
-                username,
+                username: email,
                 email,
                 password: bcrypt.hashSync(password, 8)
             });
