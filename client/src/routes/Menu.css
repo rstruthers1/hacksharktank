@@ -1,0 +1,27 @@
+/* Menu.css */
+.topMenu {
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.topMenu a {
+    text-decoration: none;
+    color: black;
+    margin-right: 20px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.topMenu a:hover,
+.topMenu a.active {
+    background-color: #ddd;
+    border-radius: 4px;
+}
+
+.topMenu .loginLink {
+    margin-left: auto;
+}
