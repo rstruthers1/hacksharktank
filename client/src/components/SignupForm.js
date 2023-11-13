@@ -1,7 +1,7 @@
 // SignupForm.js
 import React from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import {useForm} from 'react-hook-form';
+import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import './SignupForm.css';
 
@@ -9,14 +9,19 @@ const SignupForm = () => {
     // Define your validation schema using Yup
     const validationSchema = Yup.object().shape({
         email: Yup.string().required('Email is required').email('Email is invalid'),
-        password: Yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
+        password: Yup.string()
+            .required('Password is required')
+            .min(8, 'Password must be at least 8 characters long')
+            .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+            .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+            .matches(/[0-9]/, 'Password must contain at least one number'),
         passwordConfirmation: Yup.string()
             .oneOf([Yup.ref('password'), null], 'Passwords must match')
             .required('Password confirmation is required')
     });
 
     // Initialize react-hook-form methods
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const {register, handleSubmit, formState: {errors}} = useForm({
         resolver: yupResolver(validationSchema),
         mode: "onBlur"
     });
