@@ -8,7 +8,7 @@ import About from "./components/About"
 import Root from "./routes/root";
 import RouterErrorPage from "./RouterErrorPage";
 import Login from "./components/Login";
-import Signup from "./components/Signup";
+import Signup from "./components/SignupForm";
 
 export function App() {
 
