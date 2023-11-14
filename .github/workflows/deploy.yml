@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       MY_VAR: ${{ secrets.MY_VAR }}
       DB_URL: ${{ secrets.DB_URL }}
