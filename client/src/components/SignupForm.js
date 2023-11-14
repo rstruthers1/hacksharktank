@@ -3,8 +3,9 @@ import React from 'react';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import './SignupForm.css';
+import './CenteredForms.css';
 import {useRegisterUserMutation} from "../apiService";
+import {NavLink} from "react-router-dom";
 
 const SignupForm = () => {
 
@@ -41,7 +42,7 @@ const SignupForm = () => {
     };
 
     return (
-        <div className="signupForm">
+        <div className="centeredForm">
             <form onSubmit={handleSubmit(onSubmit)}>
                 <h2>Sign Up</h2>
                 <div className="formField">
@@ -61,7 +62,9 @@ const SignupForm = () => {
                 </div>
                 <button type="submit">Sign Up</button>
                 {isLoading && <p>Registering user...</p>}
-                {isSuccess && <p>User registered successfully!</p>}
+                {isSuccess && <div><p>User registered successfully!</p>
+                   <NavLink to="/login">Login</NavLink>
+                </div>}
                 {isError && <p>Error registering user: {error.data?.message || 'Unknown error'}</p>}
 
             </form>

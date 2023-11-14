@@ -1,5 +1,5 @@
-/* SignupForm.css */
-.signupForm {
+/* CenteredForms.css */
+.centeredForm {
     max-width: 400px;
     margin: 20px auto;
     padding: 20px;
@@ -8,12 +8,12 @@
     background-color: white;
 }
 
-.signupForm form {
+.centeredForm form {
     display: flex;
     flex-direction: column;
 }
 
-.signupForm h2 {
+.centeredForm h2 {
     text-align: center;
 }
 
