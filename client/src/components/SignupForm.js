@@ -4,8 +4,11 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import './SignupForm.css';
+import {useRegisterUserMutation} from "../apiService";
 
 const SignupForm = () => {
+
+    const [registerUser, { isLoading, isSuccess, isError, data, error }] = useRegisterUserMutation();
     // Define your validation schema using Yup
     const validationSchema = Yup.object().shape({
         email: Yup.string().required('Email is required').email('Email is invalid'),
@@ -26,9 +29,15 @@ const SignupForm = () => {
         mode: "onBlur"
     });
 
-    const onSubmit = data => {
+    const onSubmit = async data => {
         // Handle your form submission here
-        console.log(data);
+        const userData = {
+            email: data.email,
+            password: data.password,
+            roles: ['user']
+        };
+        await registerUser(userData);
+
     };
 
     return (
@@ -51,6 +60,10 @@ const SignupForm = () => {
                     <p className="error">{errors.passwordConfirmation?.message}</p>
                 </div>
                 <button type="submit">Sign Up</button>
+                {isLoading && <p>Registering user...</p>}
+                {isSuccess && <p>User registered successfully!</p>}
+                {isError && <p>Error registering user: {error.data?.message || 'Unknown error'}</p>}
+
             </form>
         </div>
     );
