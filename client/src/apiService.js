@@ -1,10 +1,12 @@
 // apiService.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+const baseURL = process.env.REACT_APP_API_URL || "";
+
 export const apiService = createApi({
     reducerPath: 'apiService',
     baseQuery: fetchBaseQuery(
-        { baseUrl: `${process.env.REACT_APP_API_URL}/` }), // Set your base URL here
+        { baseUrl: `${baseURL}/` }), // Set your base URL here
     endpoints: (builder) => ({
         registerUser: builder.mutation({
             query: (userData) => ({
