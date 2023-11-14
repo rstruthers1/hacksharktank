@@ -5,9 +5,12 @@ const bcrypt = require("bcrypt")
 
 const { body, validationResult } = require('express-validator');
 const PasswordValidator = require('password-validator');
+const jwt = require("jsonwebtoken");
+
 
 // Create a schema for password validation
 const passwordSchema = new PasswordValidator();
+const HASH_SALT = 8;
 passwordSchema
     .is().min(8)                               // Minimum length 8
     .has().uppercase()                              // Must have uppercase letters
@@ -70,7 +73,7 @@ userRouter.route('/users').post(async (req, res, next) => {
             const [userId] = await trx('user').insert({
                 username: email,
                 email,
-                password: bcrypt.hashSync(password, 8)
+                password: bcrypt.hashSync(password, HASH_SALT)
             });
 
             const userRoles = roleIds.map(roleId => ({
@@ -94,6 +97,40 @@ userRouter.route('/users').post(async (req, res, next) => {
         console.error(error);
         res.status(500).json({ success: false, message: "Error creating user", error: error });
     }
+})
+
+userRouter.route('/users/login').post(async (req, res, next) => {
+    const { email, password } = req.body; // assuming these are passed in the request
+    const existingUser = await knex('user')
+        .where('email', email)
+        .first();
+
+    if (!existingUser) {
+        res.status(400).json({ success: false, message: "Invalid email or password." })
+        return;
+    }
+
+    const passwordIsValid = bcrypt.compareSync(password, existingUser.password, HASH_SALT);
+
+    if (!passwordIsValid) {
+        res.status(400).json({ success: false, message: "Invalid email or password." })
+        return;
+    }
+
+    const userRoles = await knex('user_role')
+        .where('userId', existingUser.id)
+        .join('role', 'user_role.roleId', 'role.id')
+        .select('role.name');
+
+    // create a JWT token
+    let JWT_SECRET = process.env.JWT_SECRET;
+    const token = jwt.sign({ id: existingUser.id, roles: userRoles, email: existingUser.email },
+        JWT_SECRET,
+        { expiresIn: '1h' }
+    );
+
+
+    res.json({ success: true, message: "User logged in successfully", token: token });
 })
 
 module.exports = userRouter;
