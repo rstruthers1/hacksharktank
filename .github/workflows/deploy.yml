@@ -28,4 +28,4 @@ jobs:
             git reset --hard
             git pull origin main
             npm install
-            pm2 restart --update-env my-app
+            pm2 start --update-env my-app
