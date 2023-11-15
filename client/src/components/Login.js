@@ -40,7 +40,7 @@ const Login = () => {
         if (isSuccess) {
             if (data?.token) {
                 console.log(`data: ${JSON.stringify(data)}`);
-                localStorage.setItem('user', data.token);
+                localStorage.setItem('token', data.token);
                 navigate("/"); // Redirect to home page
             } else {
 
