@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import React, {useEffect} from "react";
 import {useLoginUserMutation} from "../apiService";
 import {useNavigate} from "react-router-dom";
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
 
@@ -42,11 +44,37 @@ const Login = () => {
                 navigate("/"); // Redirect to home page
             } else {
 
-                // popup toast message regarding invalid token
+
                 console.error(`Invalid token: ${data?.token}`)
+                toast.error('Login token is invalid or empty', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             }
         }
     }, [isSuccess]);
+
+    useEffect(() => {
+        if (isError) {
+            console.error(`Error logging in: ${JSON.stringify(error)}`);
+            toast.error(`Error logging in: ${error.data?.message || 'Unknown error'}`, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "colored",
+            });
+        }
+    }, [isError]);
+
 
     return (
         <div className="centeredForm">
@@ -65,7 +93,6 @@ const Login = () => {
                 <button type="submit">Login</button>
             </form>
             {isLoading && <p>Logging you in...</p>}
-            {isError && <p>Something went wrong: {error.data?.message || 'Unknown error'}</p>}
         </div>
     )
 }

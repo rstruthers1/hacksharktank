@@ -11,6 +11,7 @@ import Login from "./components/Login";
 import Signup from "./components/SignupForm";
 import {store} from "./store";
 import {Provider} from "react-redux";
+import {ToastContainer} from "react-toastify";
 
 export function App() {
 
@@ -32,6 +33,7 @@ export function App() {
     return (
         <Provider store={store}>
          <RouterProvider router={router} />
+            <ToastContainer />
         </Provider>
     );
 }
