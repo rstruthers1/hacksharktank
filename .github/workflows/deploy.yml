@@ -12,6 +12,7 @@ jobs:
     env:
       MY_VAR: ${{ secrets.MY_VAR }}
       DB_URL: ${{ secrets.DB_URL }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
     steps:
       - name: SSH and deploy node app
         uses: appleboy/ssh-action@master
@@ -19,7 +20,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          envs: MY_VAR, DB_URL
+          envs: MY_VAR, DB_URL, JWT_SECRET
           script: |
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
