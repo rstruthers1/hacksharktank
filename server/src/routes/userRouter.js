@@ -125,16 +125,71 @@ userRouter.route('/users/login').post(async (req, res) => {
 
         // create a JWT token
         let JWT_SECRET = process.env.JWT_SECRET;
-        const token = jwt.sign({id: existingUser.id, roles: userRoles, email: existingUser.email},
+        if (!JWT_SECRET) {
+            console.error("JWT_SECRET is not defined");
+            res.status(500).json({success: false, message: "Error logging in user"});
+            return;
+        }
+        const userRoleNames = userRoles.map(userRole => userRole.name);
+        const token = jwt.sign({id: existingUser.id, roles: userRoleNames, email: existingUser.email},
             JWT_SECRET,
             {expiresIn: '1h'}
         );
-
-
         res.json({success: true, message: "User logged in successfully", token: token});
     } catch (error) {
         console.error(error);
         res.status(500).json({success: false, message: "Error logging in user", error: error});
+    }
+})
+
+
+userRouter.route('/users/admin/resetuserpassword').post(async (req, res) => {
+    try {
+        // Only users with role of admin can reset passwords
+        const auth = req.header('Authorization');
+        if (!auth) {
+            res.status(401).json({success: false, message: "Unauthorized"});
+            return;
+        }
+        const token = auth.split(' ')[1];
+        if (!token) {
+            res.status(401).json({success: false, message: "Unauthorized"});
+            return;
+        }
+
+        if (!process.env.JWT_SECRET) {
+            console.error("JWT_SECRET is not defined");
+            res.status(500).json({success: false, message: "Error resetting password"});
+            return;
+        }
+        const jwtPayload = jwt.verify(token, process.env.JWT_SECRET);
+        if (!jwtPayload.roles.includes('admin')) {
+            res.status(401).json({success: false, message: "Unauthorized"});
+            return;
+        }
+
+        const {email, password} = req.body; // assuming these are passed in the request
+        const existingUser = await knex('user')
+            .where('email', email)
+            .first();
+        if (!existingUser) {
+            res.status(400).json({success: false, message: "User does not exist"})
+            return;
+        }
+
+        if (!passwordSchema.validate(password)) {
+            res.status(400).json({success: false, message: "Password does not meet complexity requirements."})
+            return;
+        }
+
+        await knex('user')
+            .where('email', email)
+            .update({password: bcrypt.hashSync(password, HASH_SALT)});
+        res.json({success: true, message: "Password reset successfully"});
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({success: false, message: "Error resetting password", error: error});
     }
 })
 
