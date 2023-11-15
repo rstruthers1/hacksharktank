@@ -23,6 +23,7 @@ jobs:
           script: |
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
+            pm2 stop my-app
             cd hacksharktank
             git reset --hard
             git pull origin main
