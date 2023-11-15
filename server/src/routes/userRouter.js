@@ -40,7 +40,7 @@ userRouter.route('/users/').get(async (request, response, next) => {
     }
 });
 
-userRouter.route('/users').post(async (req, res, next) => {
+userRouter.route('/users').post(async (req, res) => {
     const { email, password, roles } = req.body; // assuming these are passed in the request
 
     try {
@@ -99,38 +99,43 @@ userRouter.route('/users').post(async (req, res, next) => {
     }
 })
 
-userRouter.route('/users/login').post(async (req, res, next) => {
-    const { email, password } = req.body; // assuming these are passed in the request
-    const existingUser = await knex('user')
-        .where('email', email)
-        .first();
+userRouter.route('/users/login').post(async (req, res) => {
+    try {
+        const {email, password} = req.body; // assuming these are passed in the request
+        const existingUser = await knex('user')
+            .where('email', email)
+            .first();
 
-    if (!existingUser) {
-        res.status(400).json({ success: false, message: "Invalid email or password." })
-        return;
+        if (!existingUser) {
+            res.status(400).json({success: false, message: "Invalid email or password."})
+            return;
+        }
+
+        const passwordIsValid = bcrypt.compareSync(password, existingUser.password, HASH_SALT);
+
+        if (!passwordIsValid) {
+            res.status(400).json({success: false, message: "Invalid email or password."})
+            return;
+        }
+
+        const userRoles = await knex('user_role')
+            .where('userId', existingUser.id)
+            .join('role', 'user_role.roleId', 'role.id')
+            .select('role.name');
+
+        // create a JWT token
+        let JWT_SECRET = process.env.JWT_SECRET;
+        const token = jwt.sign({id: existingUser.id, roles: userRoles, email: existingUser.email},
+            JWT_SECRET,
+            {expiresIn: '1h'}
+        );
+
+
+        res.json({success: true, message: "User logged in successfully", token: token});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({success: false, message: "Error logging in user", error: error});
     }
-
-    const passwordIsValid = bcrypt.compareSync(password, existingUser.password, HASH_SALT);
-
-    if (!passwordIsValid) {
-        res.status(400).json({ success: false, message: "Invalid email or password." })
-        return;
-    }
-
-    const userRoles = await knex('user_role')
-        .where('userId', existingUser.id)
-        .join('role', 'user_role.roleId', 'role.id')
-        .select('role.name');
-
-    // create a JWT token
-    let JWT_SECRET = process.env.JWT_SECRET;
-    const token = jwt.sign({ id: existingUser.id, roles: userRoles, email: existingUser.email },
-        JWT_SECRET,
-        { expiresIn: '1h' }
-    );
-
-
-    res.json({ success: true, message: "User logged in successfully", token: token });
 })
 
 module.exports = userRouter;
