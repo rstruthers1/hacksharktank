@@ -15,9 +15,16 @@ export const apiService = createApi({
                 body: userData,
             }),
         }),
+        loginUser: builder.mutation({
+            query: (userData) => ({
+                url: 'users/login', // Your endpoint path
+                method: 'POST',
+                body: userData,
+            }),
+        }),
         // You can add more endpoints here
     }),
 });
 
-// Export the auto-generated hook for the `registerUser` mutation
-export const { useRegisterUserMutation } = apiService;
+// Export the auto-generated hook for the `registerUser` and `loginUser` mutation
+export const { useRegisterUserMutation, useLoginUserMutation } = apiService;
