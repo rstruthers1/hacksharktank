@@ -6,6 +6,8 @@ const bcrypt = require("bcrypt")
 const { body, validationResult } = require('express-validator');
 const PasswordValidator = require('password-validator');
 const jwt = require("jsonwebtoken");
+const authenticateToken = require("../middleware/auth");
+
 
 
 // Create a schema for password validation
@@ -99,9 +101,10 @@ userRouter.route('/users').post(async (req, res) => {
     }
 })
 
-userRouter.route('/users/login').post(async (req, res) => {
+userRouter.route('/users/login').post( async (req, res) => {
     try {
-        const {email, password} = req.body; // assuming these are passed in the request
+        const {email, password} = req.body;
+
         const existingUser = await knex('user')
             .where('email', email)
             .first();
@@ -143,31 +146,15 @@ userRouter.route('/users/login').post(async (req, res) => {
 })
 
 
-userRouter.route('/users/admin/resetuserpassword').post(async (req, res) => {
+userRouter.route('/users/reset-password').post(authenticateToken, async (req, res) => {
+
     try {
-        // Only users with role of admin can reset passwords
-        const auth = req.header('Authorization');
-        if (!auth) {
-            res.status(401).json({success: false, message: "Unauthorized"});
-            return;
-        }
-        const token = auth.split(' ')[1];
-        if (!token) {
-            res.status(401).json({success: false, message: "Unauthorized"});
-            return;
-        }
 
-        if (!process.env.JWT_SECRET) {
-            console.error("JWT_SECRET is not defined");
-            res.status(500).json({success: false, message: "Error resetting password"});
+        const authUserRoles = req.user.roles;
+        if (!authUserRoles.includes('admin')) {
+            res.status(401).json({ success: false, message: "Unauthorized" })
             return;
         }
-        const jwtPayload = jwt.verify(token, process.env.JWT_SECRET);
-        if (!jwtPayload.roles.includes('admin')) {
-            res.status(401).json({success: false, message: "Unauthorized"});
-            return;
-        }
-
         const {email, password} = req.body; // assuming these are passed in the request
         const existingUser = await knex('user')
             .where('email', email)

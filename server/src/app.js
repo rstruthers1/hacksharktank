@@ -4,6 +4,7 @@ const expressStaticGzip = require("express-static-gzip");
 const path = require("path");
 require('dotenv').config()
 const userRouter = require('./routes/userRouter')
+const hackathonRouter = require('./routes/hackathonRouter');
 
 
 const STATIC_FOLDER = path.join(__dirname, "../", "../", "client/", "build/");
@@ -16,7 +17,9 @@ app.use(express.json());
 app.use(cors());
 
 
-app.use('/', userRouter)
+
+app.use('/', userRouter);
+app.use('/', hackathonRouter);
 app.get("/myvar",(_, res) => res.json({MY_VAR: myVar}))
 
 
