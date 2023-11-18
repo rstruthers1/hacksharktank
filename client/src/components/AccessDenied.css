@@ -1,0 +1,34 @@
+/* AccessDenied.css */
+.access-denied-container {
+    text-align: center;
+    padding: 50px;
+    max-width: 600px;
+    margin: 100px auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.access-denied-container h1 {
+    color: #de4436;
+    font-size: 2.5rem;
+}
+
+.access-denied-container p {
+    font-size: 1.2rem;
+    margin: 20px 0;
+}
+
+.access-denied-container a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.access-denied-container a:hover {
+    background-color: #0056b3;
+}

@@ -9,8 +9,6 @@ const hackathonRouter = require('./routes/hackathonRouter');
 
 const STATIC_FOLDER = path.join(__dirname, "../", "../", "client/", "build/");
 const HTTP_PORT = Number(process.env.HTTP_PORT || 5000);
-const myVar = process.env.MY_VAR;
-console.log(`*** myVar: ${myVar}`)
 
 const app = express();
 app.use(express.json());

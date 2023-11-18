@@ -1,6 +1,6 @@
 import {NavLink, Outlet, useNavigate} from "react-router-dom";
 import './Menu.css';
-import {isUserLoggedIn} from "../utils/utils";
+import {isUserAdmin, isUserLoggedIn} from "../utils/authUtils";
 
 export default function Root() {
 
@@ -12,11 +12,13 @@ export default function Root() {
         navigate('/login');
     }
 
+
     return (
         <div>
             <nav className="topMenu">
                 <NavLink to="/" className={({isActive}) => isActive ? 'active' : ''}>Home</NavLink>
                 <NavLink to="/about" className={({isActive}) => isActive ? 'active' : ''}>About</NavLink>
+                {isUserAdmin() && <NavLink to="/create-hackathon" className={({isActive}) => isActive ? 'active' : ''}>Create Hackathon</NavLink>}
                 <div className="rightMenuItemLink">
                     {isUserLoggedIn() ?
                         <NavLink onClick={handleLogout} className={({isActive}) => isActive ? 'active' : ''}>Logout</NavLink> :

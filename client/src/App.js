@@ -12,6 +12,9 @@ import Signup from "./components/SignupForm";
 import {store} from "./store";
 import {Provider} from "react-redux";
 import {ToastContainer} from "react-toastify";
+import HackathonForm from "./components/HackathonForm";
+import ProtectedRoutes from "./ProtectedRoutes";
+import AccessDenied from "./components/AccessDenied";
 
 export function App() {
 
@@ -26,9 +29,16 @@ export function App() {
                 { path: "", element: <Home/> },
                 { path: "/about", element: <About/> },
                 { path: "/login", element: <Login/> },
-                { path: "/signup", element: <Signup/> }
+                { path: "/signup", element: <Signup/> },
+                { path: "/access-denied", element: <AccessDenied/> },
+            ]
+        },
+        {element: <ProtectedRoutes onlyAdmin/>,
+            children: [
+                {path: "/create-hackathon", element: <HackathonForm/>}
             ]
         }
+
     ]);
     return (
         <Provider store={store}>

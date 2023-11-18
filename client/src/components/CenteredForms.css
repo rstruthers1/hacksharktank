@@ -34,6 +34,12 @@
     border: 1px solid #ddd;
     border-radius: 4px;
 }
+.formField input[type="date"] {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
 
 button {
     padding: 10px;
@@ -52,4 +58,9 @@ button:hover {
     color: red;
     font-size: 0.8rem;
     margin-top: 5px;
+}
+
+ /*Datepicker width*/
+.react-datepicker-wrapper {
+    width: 100%;
 }
