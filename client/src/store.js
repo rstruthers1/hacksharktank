@@ -1,13 +1,15 @@
 // store.js
 import { configureStore } from '@reduxjs/toolkit';
-import { apiService } from './apiService'; // We'll create this next
+import { userApi } from './apis/userApi';
+import {hackathonApi} from "./apis/hackathonApi";
 
 export const store = configureStore({
     reducer: {
         // Add the generated reducer as a specific top-level slice
-        [apiService.reducerPath]: apiService.reducer,
+        [userApi.reducerPath]: userApi.reducer,
+        [hackathonApi.reducerPath]: hackathonApi.reducer,
     },
     // Adding the api middleware enables caching, invalidation, polling, and other features of `createApi`
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(apiService.middleware),
+        getDefaultMiddleware().concat(userApi.middleware).concat(hackathonApi.middleware),
 });

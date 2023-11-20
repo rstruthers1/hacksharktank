@@ -131,3 +131,6 @@ dist
 
 # Intellij
 .idea
+
+# Other
+temp

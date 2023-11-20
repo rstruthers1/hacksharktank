@@ -3,12 +3,13 @@ const knex = require('../config/knex')
 const hackathonRouter = express.Router();
 const { body, validationResult, check} = require('express-validator');
 const authenticateToken = require("../middleware/auth");
+const {convertDateToDBFormat, getTodayAtMidnight} = require("../utils/dateTimeUtils");
 
 const validateHackathonInput = [
-    body('eventName').isLength({ min: 3 }).withMessage('Event name must be at least three characters long'),
-    body('description').isLength({ min: 3 }).withMessage('Description must be at least three characters long'),
+    body('eventName').isLength({ min: 3}).withMessage('Event name must be at least three characters long').isLength({ max: 256}).withMessage('Event name must be at most 256 characters long'),
+    body('description').isLength({ min: 3}).withMessage('Description must be at least three characters long').isLength({ max: 512}).withMessage('Description must be at most 512 characters long'),
     body('startDate').isISO8601().withMessage('Start date must be a valid date'),
-    body('startDate').isAfter(new Date().toISOString()).withMessage('Start date must not be in the past'),
+    body('startDate').not().isBefore(getTodayAtMidnight().toISOString()).withMessage('Start date must not be in the past'),
     body('endDate').isISO8601().withMessage('End date must be a valid date'),
     check('startDate').toDate().custom((startDate, { req }) => {
         if (startDate.getTime() >= Date.parse(req.body.endDate)) {
@@ -40,7 +41,6 @@ Sample payload with time in startDate and endDate:
 
 hackathonRouter.route('/hackathons').post(authenticateToken, async (req, res) => {
     const { eventName, description, startDate, endDate } = req.body; // assuming these are passed in the request
-
     try {
         const authUserRoles = req.user.roles;
         if (!authUserRoles.includes('admin')) {
@@ -68,8 +68,8 @@ hackathonRouter.route('/hackathons').post(authenticateToken, async (req, res) =>
         const newHackathon = {
             eventName,
             description,
-            startDate,
-            endDate
+            startDate: convertDateToDBFormat(startDate),
+            endDate: convertDateToDBFormat(endDate)
         };
 
         const [hackathonId] = await knex('hackathon').insert(newHackathon);
@@ -81,6 +81,7 @@ hackathonRouter.route('/hackathons').post(authenticateToken, async (req, res) =>
                 description,
             }});
     } catch (err) {
+        console.error(err);
         res.status(500).json({ success: false, message: err.message });
     }
 })

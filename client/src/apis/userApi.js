@@ -1,10 +1,10 @@
-// apiService.js
+// userApi.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 const baseURL = process.env.REACT_APP_API_URL || "";
 
-export const apiService = createApi({
-    reducerPath: 'apiService',
+export const userApi = createApi({
+    reducerPath: 'userApi',
     baseQuery: fetchBaseQuery(
         { baseUrl: `${baseURL}/` }), // Set your base URL here
     endpoints: (builder) => ({
@@ -27,4 +27,4 @@ export const apiService = createApi({
 });
 
 // Export the auto-generated hook for the `registerUser` and `loginUser` mutation
-export const { useRegisterUserMutation, useLoginUserMutation } = apiService;
+export const { useRegisterUserMutation, useLoginUserMutation } = userApi;
