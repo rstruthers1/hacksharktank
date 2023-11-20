@@ -1,6 +1,6 @@
-import {NavLink, Outlet, useNavigate} from "react-router-dom";
+import {Link, NavLink, Outlet, useNavigate} from "react-router-dom";
 import './Menu.css';
-import {isUserAdmin, isUserLoggedIn} from "../utils/authUtils";
+import {isUserAdmin, isUserLoggedIn, logoutUser} from "../utils/authUtils";
 
 export default function Root() {
 
@@ -8,7 +8,7 @@ export default function Root() {
 
     const handleLogout = (ev) => {
         ev.preventDefault();
-        localStorage.removeItem('token');
+        logoutUser()
         navigate('/login');
     }
 
@@ -21,7 +21,7 @@ export default function Root() {
                 {isUserAdmin() && <NavLink to="/create-hackathon" className={({isActive}) => isActive ? 'active' : ''}>Create Hackathon</NavLink>}
                 <div className="rightMenuItemLink">
                     {isUserLoggedIn() ?
-                        <NavLink onClick={handleLogout} className={({isActive}) => isActive ? 'active' : ''}>Logout</NavLink> :
+                        <Link onClick={handleLogout}>Logout</Link> :
                         <>
                             <NavLink to="/signup" className={({isActive}) => isActive ? 'active' : ''}>Sign Up</NavLink>
                             <NavLink to="/login"  className={({isActive}) => isActive ? 'active' : ''}>Login</NavLink>

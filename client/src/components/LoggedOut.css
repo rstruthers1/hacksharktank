@@ -1,0 +1,40 @@
+/* LoggedOut.css */
+.loggedOutContainer {
+    text-align: center;
+    padding: 50px;
+    max-width: 600px;
+    margin: 100px auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.loggedOutContainer h1 {
+    color: #333;
+    font-size: 2.5rem;
+}
+
+.loggedOutContainer p {
+    font-size: 1.2rem;
+    margin: 20px 0;
+}
+
+.loggedOutContainer .loginAgainButton,
+.loggedOutContainer .homeButton {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    background-color: #007bff;
+}
+
+.loggedOutContainer .homeButton {
+    background-color: #28a745;
+}
+
+.loggedOutContainer a:hover {
+    opacity: 0.9;
+}
