@@ -3,7 +3,7 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import React, {useEffect} from "react";
-import {useLoginUserMutation} from "../apiService";
+import {useLoginUserMutation} from "../apis/userApi";
 import {useNavigate} from "react-router-dom";
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
