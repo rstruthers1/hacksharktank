@@ -4,6 +4,8 @@ const hackathonRouter = express.Router();
 const { body, validationResult, check} = require('express-validator');
 const authenticateToken = require("../middleware/auth");
 const {convertDateToDBFormat, getTodayAtMidnight} = require("../utils/dateTimeUtils");
+const {addHackathonUserRoles} = require("../dao/hackathonUser");
+const {getRoleIds} = require("../dao/hackathonRoles");
 
 const validateHackathonInput = [
     body('eventName').isLength({ min: 3}).withMessage('Event name must be at least three characters long').isLength({ max: 256}).withMessage('Event name must be at most 256 characters long'),
@@ -85,6 +87,71 @@ hackathonRouter.route('/hackathons').post(authenticateToken, async (req, res) =>
                 eventName,
                 description,
             }});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+})
+
+/*
+sample payload
+{
+    "hackathonId": 1,
+    "userId": 1,
+    "hackathonRoles": ["participant", "admin"]
+}
+ */
+
+hackathonRouter.route('/hackathons/user').post(authenticateToken, async (req, res) => {
+    const {hackathonId, userId, hackathonRoles} = req.body;
+    try {
+        const authUserRoles = req.user.roles;
+        if (!authUserRoles.includes('admin')) {
+            res.status(401).json({ success: false, message: "Unauthorized" })
+            return;
+        }
+
+        if (!hackathonId) {
+            res.status(400).json({ success: false, message: "Missing required fields hackathonId" })
+            return;
+        }
+
+        if (!userId) {
+            res.status(400).json({ success: false, message: "Missing required fields userId" })
+            return;
+        }
+
+        if (!hackathonRoles || hackathonRoles.length === 0) {
+            res.status(400).json({ success: false, message: "Missing required fields hackathonRoles" })
+            return;
+        }
+
+        const roleIds = await getRoleIds(hackathonRoles);
+        if (!roleIds) {
+            res.status(400).json({ success: false, message: "Role(s) not found" })
+            return;
+        }
+
+        // Send back which roles were not found
+        const roleNames = Object.keys(roleIds);
+        const missingRoles = hackathonRoles.filter(role => !roleNames.includes(role));
+        if (missingRoles.length > 0) {
+            res.status(400).json({ success: false, message: `Hackathon role(s) ${missingRoles.join(', ')} not found` })
+            return;
+        }
+
+        const newHackathonUserRoles = await addHackathonUserRoles(knex, hackathonId, userId, Object.values(roleIds));
+        if (!newHackathonUserRoles) {
+            res.status(500).json({ success: false, message: "Error adding user to hackathon" })
+            return;
+        }
+        res.status(200).json({ success: true, message: "User added to hackathon successfully.",
+                user: {
+                hackathonId,
+                userId,
+                hackathonRoles
+            }});
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: err.message });
