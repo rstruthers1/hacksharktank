@@ -35,7 +35,6 @@ function authenticateToken(req, res, next) {
         }
 
         req.user = user
-        console.log(`req.user: ${JSON.stringify(req.user)}`)
         next()
     })
 }
