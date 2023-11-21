@@ -1,9 +1,10 @@
-import {Link, NavLink, Outlet, useNavigate} from "react-router-dom";
+import {Link, Outlet, useNavigate} from "react-router-dom";
 import './Menu.css';
 import {isUserAdmin, isUserLoggedIn, logoutUser} from "../utils/authUtils";
+import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap'
 
 export default function Root() {
-
     const navigate = useNavigate();
 
     const handleLogout = (ev) => {
@@ -12,23 +13,45 @@ export default function Root() {
         navigate('/login');
     }
 
-
     return (
         <div>
-            <nav className="topMenu">
-                <NavLink to="/" className={({isActive}) => isActive ? 'active' : ''}>Home</NavLink>
-                <NavLink to="/about" className={({isActive}) => isActive ? 'active' : ''}>About</NavLink>
-                {isUserAdmin() && <NavLink to="/create-hackathon" className={({isActive}) => isActive ? 'active' : ''}>Create Hackathon</NavLink>}
-                <div className="rightMenuItemLink">
-                    {isUserLoggedIn() ?
-                        <Link onClick={handleLogout}>Logout</Link> :
-                        <>
-                            <NavLink to="/signup" className={({isActive}) => isActive ? 'active' : ''}>Sign Up</NavLink>
-                            <NavLink to="/login"  className={({isActive}) => isActive ? 'active' : ''}>Login</NavLink>
-                        </>
-                    }
-                </div>
-            </nav>
+            <Navbar bg="light" expand="lg">
+                <Container>
+                    <Navbar.Brand as={Link} to="/">MyApp</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="me-auto">
+                            <LinkContainer to="/about">
+                                <Nav.Link>About</Nav.Link>
+                            </LinkContainer>
+                            {isUserAdmin() &&
+                                <NavDropdown title="Hackathon" id="basic-nav-dropdown">
+                                    <LinkContainer to="/create-hackathon">
+                                        <NavDropdown.Item>Create Hackathon</NavDropdown.Item>
+                                    </LinkContainer>
+                                    <LinkContainer to="/hackathons">
+                                        <NavDropdown.Item>Hackathons</NavDropdown.Item>
+                                    </LinkContainer>
+                                 </NavDropdown>
+                            }
+                        </Nav>
+                        <Nav>
+                            {isUserLoggedIn() ? (
+                                    <Nav.Link  onClick={handleLogout}>Log Out</Nav.Link>
+                            ) : (
+                                <>
+                                    <LinkContainer to="/signup">
+                                        <Nav.Link>Sign Up</Nav.Link>
+                                    </LinkContainer>
+                                    <LinkContainer to="/login">
+                                        <Nav.Link>Login</Nav.Link>
+                                    </LinkContainer>
+                                </>
+                            )}
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
             <Outlet/>
         </div>
     )

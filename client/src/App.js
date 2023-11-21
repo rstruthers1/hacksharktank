@@ -17,6 +17,7 @@ import AccessDenied from "./components/AccessDenied";
 import LoggedOut from "./components/LoggedOut";
 import {useEffect} from "react";
 import {isSessionExpired, logoutUser} from "./utils/authUtils";
+import HackathonList from "./components/HackathonList";
 
 export function App() {
     useEffect(() => {
@@ -52,16 +53,16 @@ export function App() {
         },
         {element: <ProtectedRoutes onlyAdmin/>,
             children: [
-                {path: "/create-hackathon", element: <HackathonForm/>}
+                {path: "/create-hackathon", element: <HackathonForm/>},
+                {path: "/hackathons", element: <HackathonList/>},
             ]
         }
 
     ]);
     return (
         <Provider store={store}>
-         <RouterProvider router={router} />
+            <RouterProvider router={router} />
             <ToastContainer />
-
         </Provider>
     );
 }
