@@ -19,10 +19,15 @@ const validateHackathonInput = [
     })
 ];
 
-hackathonRouter.route('/hackathons').get(async (request, response, next) => {
+hackathonRouter.route('/hackathons').get(authenticateToken, async (req, res, next) => {
     try {
+        const authUserRoles = req.user.roles;
+        if (!authUserRoles.includes('admin')) {
+            res.status(401).json({ success: false, message: "Unauthorized" })
+            return;
+        }
         const hackathons = await knex('hackathon').select('id', 'eventName', 'description', 'startDate', 'endDate')
-        response.json(hackathons);
+        res.json(hackathons);
     } catch (err) {
         next(err)
     }
