@@ -27,3 +27,7 @@ jobs:
           cd server
           ls
           npm install
+          cd ../client
+          ls
+          npm install
+          npm run build
