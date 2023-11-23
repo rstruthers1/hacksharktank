@@ -24,5 +24,6 @@ jobs:
 
       - name: Build
         run: |
+          cd server
+          ls
           npm install
-          npx webpack
