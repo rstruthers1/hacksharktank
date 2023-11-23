@@ -10,16 +10,22 @@ export const userApi = createApi({
     endpoints: (builder) => ({
         registerUser: builder.mutation({
             query: (userData) => ({
-                url: 'users', // Your endpoint path
+                url: 'users',
                 method: 'POST',
                 body: userData,
             }),
         }),
         loginUser: builder.mutation({
             query: (userData) => ({
-                url: 'users/login', // Your endpoint path
+                url: 'users/login',
                 method: 'POST',
                 body: userData,
+            }),
+        }),
+        searchUsers: builder.query({
+            query: (searchTerm) => ({
+                url: `users/search?searchTerm=${searchTerm}`,
+                method: 'GET',
             }),
         }),
         // You can add more endpoints here
@@ -27,4 +33,4 @@ export const userApi = createApi({
 });
 
 // Export the auto-generated hook for the `registerUser` and `loginUser` mutation
-export const { useRegisterUserMutation, useLoginUserMutation } = userApi;
+export const { useRegisterUserMutation, useLoginUserMutation, useLazySearchUsersQuery } = userApi;

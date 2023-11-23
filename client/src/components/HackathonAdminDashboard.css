@@ -1,0 +1,75 @@
+/* HackathonAdminDashboard.css */
+
+.admin-dashboard {
+    display: flex;
+    min-height: 100vh; /* Full viewport height */
+    font-family: Arial, sans-serif; /* Your choice of font */
+}
+
+.sidebar {
+    width: 200px; /* Adjust based on your preference */
+    background-color: #f5f5f5; /* Light grey background */
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* subtle shadow for depth */
+}
+
+.sidebar a {
+    display: block;
+    padding: 10px;
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background-color: #ddd; /* Slightly darker on hover */
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #fff; /* White background for the content area */
+    overflow-y: auto; /* Scrollable content area */
+}
+
+/* Additional styling for forms, tables, buttons, etc., inside the content area */
+
+.form-control {
+    width: 50%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .admin-dashboard {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        box-shadow: none;
+    }
+
+    .content {
+        padding: 15px;
+    }
+}
