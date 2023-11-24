@@ -1,4 +1,4 @@
-name: NodeJS with Webpack
+name: Build and Deploy Workflow
 
 on:
   push:
@@ -33,3 +33,43 @@ jobs:
           ls
           npm install
           npm run build
+
+      - name: Stop web server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: MY_VAR, DB_URL, JWT_SECRET
+          script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            pm2 stop my-app
+
+      # Deploy to DigitalOcean Droplet using appleboy/scp-action
+      # This step will only run when the push is to the main branch
+      - name: Deploy to DigitalOcean
+        # if: github.ref == 'refs/heads/main' # Conditional statement
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: 22
+          source: "server,client/build"
+          target: "/home/github/hacksharktank"
+
+      - name: Start web server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: MY_VAR, DB_URL, JWT_SECRET
+          script: |
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
+            cd hacksharktank
+            pm2 start --update-env my-app
+
+
