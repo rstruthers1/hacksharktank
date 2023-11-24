@@ -33,9 +33,21 @@ const validateUserInput = [
 ];
 
 
-userRouter.route('/users/').get(async (request, response, next) => {
+userRouter.route('/users').get(async (request, response, next) => {
     try {
         const users = await knex('user').select('id', 'username', 'email')
+        response.json(users);
+    } catch (err) {
+        next(err)
+    }
+});
+
+
+userRouter.route('/users/search').get(async (request, response, next) => {
+    try {
+        const searchTerm = request.query.searchTerm;
+        const users = await knex('user').select('id', 'username', 'email')
+            .where('email', 'like', `%${searchTerm}%`)
         response.json(users);
     } catch (err) {
         next(err)

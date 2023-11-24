@@ -18,6 +18,9 @@ import LoggedOut from "./components/LoggedOut";
 import {useEffect} from "react";
 import {isSessionExpired, logoutUser} from "./utils/authUtils";
 import HackathonList from "./components/HackathonList";
+import HackathonAdminDashboard from "./components/HackathonAdminDashboard";
+import EditHackathonForm from "./components/EditHackathonForm";
+import UserManagement from "./components/UserManagement";
 
 export function App() {
     useEffect(() => {
@@ -43,26 +46,34 @@ export function App() {
             errorElement: <RouterErrorPage/>,
 
             children: [
-                { path: "", element: <Home/> },
-                { path: "/about", element: <About/> },
-                { path: "/login", element: <Login/> },
-                { path: "/signup", element: <Signup/> },
-                { path: "/access-denied", element: <AccessDenied/> },
+                {path: "", element: <Home/>},
+                {path: "/about", element: <About/>},
+                {path: "/login", element: <Login/>},
+                {path: "/signup", element: <Signup/>},
+                {path: "/access-denied", element: <AccessDenied/>},
                 {path: "/logged-out", element: <LoggedOut/>},
             ]
         },
-        {element: <ProtectedRoutes onlyAdmin/>,
+        {
+            element: <ProtectedRoutes onlyAdmin/>,
             children: [
                 {path: "/create-hackathon", element: <HackathonForm/>},
                 {path: "/hackathons", element: <HackathonList/>},
+                {
+                    path: '/admin/hackathon/:hackathonId', element: <HackathonAdminDashboard/>,
+                    children: [
+                        {path: 'edit', element: <EditHackathonForm/>},
+                        {path: 'users', element: <UserManagement/>},
+                    ]
+                }
             ]
         }
 
     ]);
     return (
         <Provider store={store}>
-            <RouterProvider router={router} />
-            <ToastContainer />
+            <RouterProvider router={router}/>
+            <ToastContainer/>
         </Provider>
     );
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Table, Pagination } from 'react-bootstrap';
 import {formatDateTimeAsDate} from "../utils/dateTimeUtils";
 import './HackathonTable.css'
+import {Link} from "react-router-dom";
 
 const HackathonTable = ({ hackathons, itemsPerPage = 5 }) => {
     const [activePage, setActivePage] = useState(1);
@@ -29,8 +30,6 @@ const HackathonTable = ({ hackathons, itemsPerPage = 5 }) => {
         );
     }
 
-
-
     return (
         <div className="table-container">
             <div className="search-container">
@@ -55,7 +54,7 @@ const HackathonTable = ({ hackathons, itemsPerPage = 5 }) => {
                 {currentItems.map((hackathon) => (
                     <tr key={hackathon.id}>
                         <td>{hackathon.id}</td>
-                        <td>{hackathon.eventName}</td>
+                        <td><Link to={`/admin/hackathon/${hackathon.id}/edit`}>{hackathon.eventName}</Link></td>
                         <td>{hackathon.description}</td>
                         <td>{formatDateTimeAsDate(hackathon.startDate)}</td>
                         <td>{formatDateTimeAsDate(hackathon.endDate)}</td>
@@ -68,9 +67,7 @@ const HackathonTable = ({ hackathons, itemsPerPage = 5 }) => {
                 <Pagination>
                     <Pagination.First onClick={() => paginate(1)} disabled={activePage === 1} />
                     <Pagination.Prev onClick={() => paginate(activePage - 1)} disabled={activePage === 1} />
-
                     {items}
-
                     <Pagination.Next onClick={() => paginate(activePage + 1)} disabled={activePage === totalPages} />
                     <Pagination.Last onClick={() => paginate(totalPages)} disabled={activePage === totalPages} />
                 </Pagination>

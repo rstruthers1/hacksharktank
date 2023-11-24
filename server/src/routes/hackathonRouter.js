@@ -35,6 +35,26 @@ hackathonRouter.route('/hackathons').get(authenticateToken, async (req, res, nex
     }
 });
 
+hackathonRouter.route('/hackathons/:id').get(authenticateToken, async (req, res, next) => {
+    try {
+        const authUserRoles = req.user.roles;
+        if (!authUserRoles.includes('admin')) {
+            res.status(401).json({ success: false, message: "Unauthorized" })
+            return;
+        }
+        const hackathon = await knex('hackathon')
+            .where('id', req.params.id)
+            .first();
+        if (!hackathon) {
+            res.status(404).json({ success: false, message: "Hackathon not found" })
+            return;
+        }
+        res.json(hackathon);
+    } catch (err) {
+        next(err)
+    }
+});
+
 /**
 Create a new hackathon
 Sample payload with time in startDate and endDate:
@@ -102,7 +122,7 @@ sample payload
 }
  */
 
-hackathonRouter.route('/hackathons/user').post(authenticateToken, async (req, res) => {
+hackathonRouter.route('/hackathons/users/roles').post(authenticateToken, async (req, res) => {
     const {hackathonId, userId, hackathonRoles} = req.body;
     try {
         const authUserRoles = req.user.roles;
@@ -112,17 +132,17 @@ hackathonRouter.route('/hackathons/user').post(authenticateToken, async (req, re
         }
 
         if (!hackathonId) {
-            res.status(400).json({ success: false, message: "Missing required fields hackathonId" })
+            res.status(400).json({ success: false, message: "Missing required field hackathonId" })
             return;
         }
 
         if (!userId) {
-            res.status(400).json({ success: false, message: "Missing required fields userId" })
+            res.status(400).json({ success: false, message: "Missing required field userId" })
             return;
         }
 
         if (!hackathonRoles || hackathonRoles.length === 0) {
-            res.status(400).json({ success: false, message: "Missing required fields hackathonRoles" })
+            res.status(400).json({ success: false, message: "Missing required field hackathonRoles" })
             return;
         }
 
@@ -157,5 +177,38 @@ hackathonRouter.route('/hackathons/user').post(authenticateToken, async (req, re
         res.status(500).json({ success: false, message: err.message });
     }
 })
+
+hackathonRouter.route('/hackathons/:id/users').get(authenticateToken, async (req, res, next) => {
+    try {
+        const authUserRoles = req.user.roles;
+        if (!authUserRoles.includes('admin')) {
+            res.status(401).json({ success: false, message: "Unauthorized" })
+            return;
+        }
+
+        const hackathonUsers = await knex('user_hackathon_role')
+            .join('hackathon_role', 'user_hackathon_role.hackathonRoleId', '=', 'hackathon_role.id')
+            .join('user', 'user_hackathon_role.userId', '=', 'user.id')
+            .select('user.id', 'user.email', 'hackathon_role.name as hackathonRoles')
+            .where('user_hackathon_role.hackathonId', req.params.id)
+        if (!hackathonUsers) {
+            res.status(404).json({ success: false, message: "Hackathon not found" })
+            return;
+        }
+        const hackathonUsersWithRoles = hackathonUsers.reduce((acc, user) => {
+            const userWithRoles = acc.find(u => u.id === user.id);
+            if (userWithRoles) {
+                userWithRoles.hackathonRoles.push(user.hackathonRoles);
+            } else {
+                acc.push({id: user.id, email: user.email, hackathonRoles: [user.hackathonRoles]});
+            }
+            return acc;
+        }
+        , []);
+        res.json(hackathonUsersWithRoles);
+    } catch (err) {
+        next(err)
+    }
+});
 
 module.exports = hackathonRouter;

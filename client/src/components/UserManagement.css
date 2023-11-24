@@ -1,0 +1,24 @@
+/* UserManagement.css */
+
+.user-management {
+    padding-top: 20px
+}
+
+.user-list {
+    list-style: none;
+    padding: 0;
+}
+
+.user-list li {
+    width: 50%;
+    background-color: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    padding: 10px;
+    margin-bottom: 0px;
+    border-radius: 6px;
+}
+
+/* Styles for UserSearchAsyncSelect, roles management buttons, etc. */
+.user-management .user-search {
+    margin-bottom: 20px;
+}
