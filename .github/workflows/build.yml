@@ -3,8 +3,8 @@ name: Build and Deploy Workflow
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+#  pull_request:
+#    branches: [ "main" ]
 
 jobs:
   build:
@@ -47,7 +47,6 @@ jobs:
             pm2 stop my-app
 
       # Deploy to DigitalOcean Droplet using appleboy/scp-action
-      # This step will only run when the push is to the main branch
       - name: Deploy to DigitalOcean
         # if: github.ref == 'refs/heads/main' # Conditional statement
         uses: appleboy/scp-action@master
