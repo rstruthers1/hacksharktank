@@ -17,6 +17,17 @@ export const hackathonApi = createApi({
                 headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
             }),
         }),
+        updateHackathon: builder.mutation({
+            query: (hackathonData) => ({
+                url: `hackathons/${hackathonData.id}`, // Your endpoint path
+                method: 'PUT',
+                body: hackathonData,
+                // Add a JWT token to the request headers if the user is logged in
+                headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: 'Hackathons'},
+                { type: 'Hackathon', id: arg.id }],
+        }),
         getHackathons: builder.query({
             query: () => ({
                 url: 'hackathons', // Your endpoint path
@@ -24,6 +35,7 @@ export const hackathonApi = createApi({
                 // Add a JWT token to the request headers if the user is logged in
                 headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
             }),
+            providesTags: (result, error, arg) => [{ type: 'Hackathons'}],
         }),
         createHackathonUserRole: builder.mutation({
             query: (hackathonUserRoleData) => ({
@@ -42,6 +54,7 @@ export const hackathonApi = createApi({
                 // Add a JWT token to the request headers if the user is logged in
                 headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
             }),
+            providesTags: (result, error, arg) => [{ type: 'Hackathon', id: arg }],
         }),
         getHackathonUsers: builder.query({
             query: (hackathonId) => ({
@@ -58,6 +71,7 @@ export const hackathonApi = createApi({
 
 export const {
     useCreateHackathonMutation,
+    useUpdateHackathonMutation,
     useGetHackathonsQuery,
     useCreateHackathonUserRoleMutation,
     useGetHackathonQuery,

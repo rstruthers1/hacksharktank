@@ -45,3 +45,15 @@ export const formatDateTimeAsDate  = (date) => {
         return '';
     }
 }
+
+export const safeStringToDate = (dateString) => {
+    if (!dateString) {
+        return null;
+    }
+    try {
+        return new Date(dateString);
+    } catch (err) {
+        console.error(err);
+        return '';
+    }
+}
