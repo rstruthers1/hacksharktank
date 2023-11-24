@@ -113,6 +113,55 @@ hackathonRouter.route('/hackathons').post(authenticateToken, async (req, res) =>
     }
 })
 
+hackathonRouter.route('/hackathons/:id').put(authenticateToken, async (req, res) => {
+    const { eventName, description, startDate, endDate } = req.body;
+    try {
+        const authUserRoles = req.user.roles;
+        if (!authUserRoles.includes('admin')) {
+            res.status(401).json({ success: false, message: "Unauthorized" })
+            return;
+        }
+
+        const existingHackathon = await knex('hackathon')
+            .where('id', req.params.id)
+            .first();
+
+        if (!existingHackathon) {
+            res.status(404).json({ success: false, message: "Hackathon not found" })
+            return;
+        }
+
+        // Perform validation after checking uniqueness
+        await Promise.all(validateHackathonInput.map(validation => validation.run(req)));
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(400).json({ success: false, message: errors.array() });
+            return;
+        }
+
+        const updatedHackathon = {
+            eventName,
+            description,
+            startDate: convertDateToDBFormat(startDate),
+            endDate: convertDateToDBFormat(endDate)
+        };
+
+        await knex('hackathon')
+            .where('id', req.params.id)
+            .update(updatedHackathon);
+        console.log(`Hackathon updated with ID ${req.params.id}`);
+        res.status(200).json({ success: true, message: "Hackathon updated successfully.",
+            hackathon: {
+                id: req.params.id,
+                eventName,
+                description,
+            }});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+})
+
 /*
 sample payload
 {

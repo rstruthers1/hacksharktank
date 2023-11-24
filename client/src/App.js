@@ -11,7 +11,7 @@ import Signup from "./components/SignupForm";
 import {store} from "./store";
 import {Provider} from "react-redux";
 import {ToastContainer} from "react-toastify";
-import HackathonForm from "./components/HackathonForm";
+import CreateHackathon from "./components/CreateHackathon";
 import ProtectedRoutes from "./ProtectedRoutes";
 import AccessDenied from "./components/AccessDenied";
 import LoggedOut from "./components/LoggedOut";
@@ -19,7 +19,7 @@ import {useEffect} from "react";
 import {isSessionExpired, logoutUser} from "./utils/authUtils";
 import HackathonList from "./components/HackathonList";
 import HackathonAdminDashboard from "./components/HackathonAdminDashboard";
-import EditHackathonForm from "./components/EditHackathonForm";
+import EditHackathon from "./components/EditHackathon";
 import UserManagement from "./components/UserManagement";
 
 export function App() {
@@ -57,12 +57,12 @@ export function App() {
         {
             element: <ProtectedRoutes onlyAdmin/>,
             children: [
-                {path: "/create-hackathon", element: <HackathonForm/>},
+                {path: "/create-hackathon", element: <CreateHackathon/>},
                 {path: "/hackathons", element: <HackathonList/>},
                 {
                     path: '/admin/hackathon/:hackathonId', element: <HackathonAdminDashboard/>,
                     children: [
-                        {path: 'edit', element: <EditHackathonForm/>},
+                        {path: 'edit', element: <EditHackathon/>},
                         {path: 'users', element: <UserManagement/>},
                     ]
                 }
