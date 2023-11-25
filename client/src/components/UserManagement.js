@@ -90,9 +90,7 @@ const UserManagement = () => {
         if (!user?.hackathonRoles || !Array.isArray(user.hackathonRoles)) {
             return [];
         }
-        const userHackathonRoles = user.hackathonRoles.map(role => ({ label: role, value: role }));
-        console.log(`userHackathonRoles: ${JSON.stringify(userHackathonRoles)}`)
-        return userHackathonRoles;
+        return user.hackathonRoles.map(role => ({ label: role, value: role }));
     }
 
     const allHackathonRoles = () => {
