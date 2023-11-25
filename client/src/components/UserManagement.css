@@ -22,3 +22,8 @@
 .user-management .user-search {
     margin-bottom: 20px;
 }
+
+
+.user-management .table td {
+    min-width: 250px; /* Provide more space for select on mobile */
+}
