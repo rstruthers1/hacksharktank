@@ -15,22 +15,69 @@ import CreateHackathon from "./components/CreateHackathon";
 import ProtectedRoutes from "./ProtectedRoutes";
 import AccessDenied from "./components/AccessDenied";
 import LoggedOut from "./components/LoggedOut";
-import {useEffect} from "react";
-import {isSessionExpired, logoutUser} from "./utils/authUtils";
+import {useEffect, useState} from "react";
+import {useIdleTimer} from "react-idle-timer";
+import {isSessionExpired, isUserLoggedIn, logoutUser} from "./utils/authUtils";
 import HackathonList from "./components/HackathonList";
 import HackathonAdminDashboard from "./components/HackathonAdminDashboard";
 import EditHackathon from "./components/EditHackathon";
 import UserManagement from "./components/UserManagement";
+import StayLoggedInPrompt from "./components/StayLoggedInPrompt";
+
+// set timeout to 1 hour
+const timeout = 3_600_000
+
+// set prompt before idle to 1 minute
+const promptBeforeIdle = 60_000
+
 
 export function App() {
+    const [stayLoggedInPromptModalOpen, setStayLoggedInPromptModalOpen] = useState(false)
+
+    const onIdle = () => {
+        if (isUserLoggedIn()) {
+            handleLogout();
+        }
+    }
+
+    const onActive = () => {
+       console.log('User is active');
+    }
+
+    const onPrompt = () => {
+        setStayLoggedInPromptModalOpen(true)
+    }
+
+    const { getRemainingTime, activate } = useIdleTimer({
+        onIdle,
+        onActive,
+        onPrompt,
+        timeout,
+        promptBeforeIdle,
+        throttle: 500
+    })
+
+
+    const handleStillHere = () => {
+        setStayLoggedInPromptModalOpen(false);
+        activate()
+    }
+
+    const handleLogout = () => {
+        setStayLoggedInPromptModalOpen(false);
+        if (!isUserLoggedIn()) {
+            return;
+        }
+        logoutUser()
+        window.location.href = '/logged-out';
+    }
+
+
     useEffect(() => {
         const checkSessionInterval = setInterval(() => {
             // Call your session check function
             if (isSessionExpired()) {
-                // Handle session expiry (e.g., logout the user, show a message, etc.)
-                logoutUser()
-                // navigate to /logged-out
-                window.location.href = '/logged-out';
+                handleLogout();
             }
         }, 60000); // Check every minute
 
@@ -74,6 +121,12 @@ export function App() {
         <Provider store={store}>
             <RouterProvider router={router}/>
             <ToastContainer/>
+                <StayLoggedInPrompt
+                    show={stayLoggedInPromptModalOpen && isUserLoggedIn()}
+                    handleLogout={handleLogout}
+                    handleStillHere={handleStillHere}
+                    getRemainingTime={getRemainingTime}
+                 />
         </Provider>
     );
 }
