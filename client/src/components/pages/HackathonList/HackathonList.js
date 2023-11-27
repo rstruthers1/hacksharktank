@@ -1,5 +1,5 @@
 import {Container} from "react-bootstrap";
-import {useGetHackathonsQuery} from "../apis/hackathonApi";
+import {useGetHackathonsQuery} from "../../../apis/hackathonApi";
 import HackathonTable from "./HackathonTable";
 
 const HackathonList = () => {

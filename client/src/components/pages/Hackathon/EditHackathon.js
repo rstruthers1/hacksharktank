@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
-import './HackathonAdminDashboard.css';
+import '../../layout/HackathonAdminDashboard/HackathonAdminDashboard.css';
 import {useParams} from "react-router-dom";
-import {useGetHackathonQuery, useUpdateHackathonMutation} from "../apis/hackathonApi";
+import {useGetHackathonQuery, useUpdateHackathonMutation} from "../../../apis/hackathonApi";
 import HackathonForm from "./HackathonForm";
 import {toast} from "react-toastify";
 

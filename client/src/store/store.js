@@ -1,8 +1,8 @@
 // store.js
 import { configureStore } from '@reduxjs/toolkit';
-import { userApi } from './apis/userApi';
-import {hackathonApi} from "./apis/hackathonApi";
-import {hackathonRoleApi} from "./apis/hackathonRoleApi";
+import { userApi } from '../apis/userApi';
+import {hackathonApi} from "../apis/hackathonApi";
+import {hackathonRoleApi} from "../apis/hackathonRoleApi";
 
 export const store = configureStore({
     reducer: {

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
-import './CenteredForms.css';
+import '../../common/CenteredForms.css';
 import 'react-datepicker/dist/react-datepicker.css'
-import {useCreateHackathonMutation} from "../apis/hackathonApi";
+import {useCreateHackathonMutation} from "../../../apis/hackathonApi";
 import {toast} from "react-toastify";
 import HackathonForm from "./HackathonForm";
 

@@ -1,10 +1,10 @@
 import {Link, Outlet, useNavigate} from "react-router-dom";
-import './Menu.css';
-import {isUserAdmin, isUserLoggedIn, logoutUser} from "../utils/authUtils";
+import './MainMenu.css';
+import {isUserAdmin, isUserLoggedIn, logoutUser} from "../../../utils/authUtils";
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
 
-export default function Root() {
+export default function MainMenu() {
     const navigate = useNavigate();
 
     const handleLogout = (ev) => {

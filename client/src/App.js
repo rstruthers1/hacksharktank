@@ -2,27 +2,27 @@ import {
     createBrowserRouter,
     RouterProvider
 } from "react-router-dom"
-import Home from "./components/Home"
-import About from "./components/About"
-import Root from "./routes/root";
-import RouterErrorPage from "./RouterErrorPage";
-import Login from "./components/Login";
-import Signup from "./components/SignupForm";
-import {store} from "./store";
+import Home from "./components/pages/Home/Home"
+import About from "./components/pages/About/About"
+import MainMenu from "./components/layout/MainMenu/MainMenu";
+import RouterErrorPage from "./routes/RouterErrorPage";
+import Login from "./components/pages/Auth/Login";
+import Signup from "./components/pages/Auth/SignupForm";
+import {store} from "./store/store";
 import {Provider} from "react-redux";
 import {ToastContainer} from "react-toastify";
-import CreateHackathon from "./components/CreateHackathon";
-import ProtectedRoutes from "./ProtectedRoutes";
-import AccessDenied from "./components/AccessDenied";
-import LoggedOut from "./components/LoggedOut";
+import CreateHackathon from "./components/pages/Hackathon/CreateHackathon";
+import ProtectedRoutes from "./routes/ProtectedRoutes";
+import AccessDenied from "./components/pages/Auth/AccessDenied";
+import LoggedOut from "./components/pages/Auth/LoggedOut";
 import {useEffect, useState} from "react";
 import {useIdleTimer} from "react-idle-timer";
 import {isSessionExpired, isUserLoggedIn, logoutUser} from "./utils/authUtils";
-import HackathonList from "./components/HackathonList";
-import HackathonAdminDashboard from "./components/HackathonAdminDashboard";
-import EditHackathon from "./components/EditHackathon";
-import UserManagement from "./components/UserManagement";
-import StayLoggedInPrompt from "./components/StayLoggedInPrompt";
+import HackathonList from "./components/pages/HackathonList/HackathonList";
+import HackathonAdminDashboard from "./components/layout/HackathonAdminDashboard/HackathonAdminDashboard";
+import EditHackathon from "./components/pages/Hackathon/EditHackathon";
+import UserManagement from "./components/pages/UserManagement/UserManagement";
+import StayLoggedInPrompt from "./components/pages/Auth/StayLoggedInPrompt";
 
 // set timeout to 1 hour
 const timeout = 3_600_000
@@ -89,7 +89,7 @@ export function App() {
     const router = createBrowserRouter([
         {
             path: "/",
-            element: <Root/>,
+            element: <MainMenu/>,
             errorElement: <RouterErrorPage/>,
 
             children: [
