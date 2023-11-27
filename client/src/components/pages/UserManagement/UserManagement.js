@@ -4,7 +4,8 @@ import {Button, Table} from "react-bootstrap";
 import {
     useCreateHackathonUserRoleMutation,
     useGetHackathonQuery,
-    useGetHackathonUsersQuery
+    useGetHackathonUsersQuery,
+    useDeleteHackathonUserRoleMutation
 } from "../../../apis/hackathonApi";
 import UserSearchModal from "./UserSearchModal";
 import {toast} from "react-toastify";
@@ -29,12 +30,15 @@ const UserManagement = () => {
         isLoading: createHackathonUserRoleIsLoading,
         isSuccess: createHackathonUserRoleIsSuccess,
         isError: createHackathonUserRoleIsError,
-        data: createHackathonUserRoleData,
         error: createHackathonUserRoleError
-    }] = useCreateHackathonUserRoleMutation();
+    }] = useCreateHackathonUserRoleMutation()
+    const [deleteHackathonUserRole, {
+        isSuccess: deleteHackathonUserRoleIsSuccess,
+        isError: deleteHackathonUserRoleIsError,
+        error: deleteHackathonUserRoleError
+    }] = useDeleteHackathonUserRoleMutation();
+
     const {data: hackathonRoles,
-        error: getHackathonRolesError,
-        isLoading: getHackathonRolesIsLoading
     } = useGetHackathonRolesQuery(hackathonId);
 
     const [modalOpen, setModalOpen] = useState(false); // State to track whether the modal is open
@@ -73,14 +77,43 @@ const UserManagement = () => {
         }
     }, [createHackathonUserRoleIsError, createHackathonUserRoleError]);
 
-    const handleRoleChange = async (selectedOptions, userId) => {
+    useEffect(() => {
+        if (deleteHackathonUserRoleIsError) {
+            toast.error(`Failed to delete user role: ${getErrorMessage(deleteHackathonUserRoleError)}`, {
+                    position: toast.POSITION.TOP_CENTER
+                }
+            );
+        }
+    }, [deleteHackathonUserRoleError, deleteHackathonUserRoleIsError]);
+
+    useEffect(() => {
+        if (deleteHackathonUserRoleIsSuccess) {
+            toast.success('Successfully deleted user role', {
+                    position: toast.POSITION.TOP_CENTER
+                }
+            );
+        }
+    }, [deleteHackathonUserRoleIsSuccess]);
+
+    const handleRoleChange = async (selectedOptions, actionMeta, userId) => {
         try {
-            const hackathonUserRoleData = {
-                hackathonId: hackathonId,
-                userId: userId,
-                hackathonRoles: selectedOptions.map(option => option.value)
-            };
-            await createHackathonUserRole(hackathonUserRoleData).unwrap();
+            if (actionMeta?.action === 'remove-value') {
+                if (actionMeta?.removedValue?.value) {
+                    const hackathonUserRoleData = {
+                        hackathonId,
+                        userId,
+                        roleName: actionMeta.removedValue.value
+                    }
+                    await deleteHackathonUserRole(hackathonUserRoleData);
+                }
+            } else {
+                const hackathonUserRoleData = {
+                    hackathonId: hackathonId,
+                    userId: userId,
+                    hackathonRoles: selectedOptions.map(option => option.value)
+                };
+                await createHackathonUserRole(hackathonUserRoleData).unwrap();
+            }
         } catch (err) {
             console.log(err);
         }
@@ -132,7 +165,7 @@ const UserManagement = () => {
                                                 options={allHackathonRoles()}
                                                 isMulti
                                                 defaultValue={getUserHackathonRoles(user)}
-                                                onChange={(selectedOptions) => handleRoleChange(selectedOptions, user.id)}
+                                                onChange={(selectedOptions,actionMeta) => handleRoleChange(selectedOptions, actionMeta, user.id)}
                                             />
                                         </td>
                                     </tr>

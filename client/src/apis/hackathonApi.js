@@ -37,6 +37,15 @@ export const hackathonApi = createApi({
             }),
             providesTags: (result, error, arg) => [{ type: 'Hackathons'}],
         }),
+        getHackathon: builder.query({
+            query: (hackathonId) => ({
+                url: `hackathons/${hackathonId}`, // Your endpoint path
+                method: 'GET',
+                // Add a JWT token to the request headers if the user is logged in
+                headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
+            }),
+            providesTags: (result, error, arg) => [{ type: 'Hackathon', id: arg }],
+        }),
         createHackathonUserRole: builder.mutation({
             query: (hackathonUserRoleData) => ({
                 url: 'hackathons/users/roles', // Your endpoint path
@@ -47,14 +56,14 @@ export const hackathonApi = createApi({
             }),
             invalidatesTags: (result, error, arg) => [{ type: 'HackathonUsers', id: arg.hackathonId }],
         }),
-        getHackathon: builder.query({
-            query: (hackathonId) => ({
-                url: `hackathons/${hackathonId}`, // Your endpoint path
-                method: 'GET',
+        deleteHackathonUserRole: builder.mutation({
+            query: (hackathonUserRoleData) => ({
+                url: `hackathons/${hackathonUserRoleData.hackathonId}/users/${hackathonUserRoleData.userId}/roles/${hackathonUserRoleData.roleName}`, // Your endpoint path
+                method: 'DELETE',
                 // Add a JWT token to the request headers if the user is logged in
                 headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
             }),
-            providesTags: (result, error, arg) => [{ type: 'Hackathon', id: arg }],
+            invalidatesTags: (result, error, arg) => [{ type: 'HackathonUsers', id: arg.hackathonId }],
         }),
         getHackathonUsers: builder.query({
             query: (hackathonId) => ({
@@ -75,5 +84,6 @@ export const {
     useGetHackathonsQuery,
     useCreateHackathonUserRoleMutation,
     useGetHackathonQuery,
-    useGetHackathonUsersQuery
+    useGetHackathonUsersQuery,
+    useDeleteHackathonUserRoleMutation
 } = hackathonApi;
