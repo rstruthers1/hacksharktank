@@ -227,6 +227,48 @@ hackathonRouter.route('/hackathons/users/roles').post(authenticateToken, async (
     }
 })
 
+hackathonRouter.route('/hackathons/:hackathonId/users/:userId/roles/:roleName').delete(authenticateToken, async (req, res) => {
+    try {
+        const authUserRoles = req.user.roles;
+        if (!authUserRoles.includes('admin')) {
+            res.status(401).json({ success: false, message: "Unauthorized" })
+            return;
+        }
+
+        const hackathonId = req.params.hackathonId;
+        const userId = req.params.userId;
+        const roleName = req.params.roleName;
+        if (!hackathonId) {
+            res.status(400).json({ success: false, message: "Missing required field hackathonId" })
+            return;
+        }
+        if (!userId) {
+            res.status(400).json({ success: false, message: "Missing required field userId" })
+            return;
+        }
+        if (!roleName) {
+            res.status(400).json({ success: false, message: "Missing required field roleName" })
+            return;
+        }
+
+        const roleIds = await getRoleIds([roleName]);
+        if (!roleIds) {
+            res.status(400).json({ success: false, message: "Role(s) not found" })
+            return;
+        }
+        const roleIdsToDelete = Object.values(roleIds);
+        await knex('user_hackathon_role')
+            .where('hackathonId', hackathonId)
+            .where('userId', userId)
+            .whereIn('hackathonRoleId', roleIdsToDelete)
+            .delete();
+        res.status(200).json({ success: true, message: "User role(s) removed from hackathon successfully."});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 hackathonRouter.route('/hackathons/:id/users').get(authenticateToken, async (req, res, next) => {
     try {
         const authUserRoles = req.user.roles;
