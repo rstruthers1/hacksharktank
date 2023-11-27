@@ -1,9 +1,12 @@
 const knex = require("../config/knex");
 const getHackathonUser = async (hackathonId, userId) => {
     try {
-        return await knex('user_hackathon_role')
-            .where('hackathonId', hackathonId)
-            .andWhere('userId', userId)
+        return await knex('hackathon_user')
+            .select('hackathon_user.*', 'hackathon_role.name as roleName')
+            .leftJoin('hackathon_user_role', 'hackathon_user.id', 'hackathon_user_role.hackathonUserId')
+            .leftJoin('hackathon_role', 'hackathon_user_role.hackathonRoleId', 'hackathon_role.id')
+            .where('hackathon_user.hackathonId', hackathonId)
+            .andWhere('hackathon_user.userId', userId)
             .first();
     } catch (err) {
         console.error(err);
@@ -12,19 +15,18 @@ const getHackathonUser = async (hackathonId, userId) => {
     }
 }
 
-const addHackathonUserRoles = async (knex, hackathonId, userId, roleIds) => {
+const addHackathonUserRoles = async (knex, hackathonUserId, roleIds) => {
     try {
         const userRoles = roleIds.map(roleId => {
             return {
-                userId: userId,
-                hackathonId: hackathonId,
+                hackathonUserId: hackathonUserId,
                 hackathonRoleId: roleId
             };
         });
 
-        return await knex('user_hackathon_role')
+        return await knex('hackathon_user_role')
             .insert(userRoles)
-            .onConflict(['userId', 'hackathonId', 'hackathonRoleId']) // specify the conflicting columns
+            .onConflict(['hackathonUserId', 'hackathonRoleId']) // specify the conflicting columns
             .merge() // merge new values for existing rows, insert otherwise
     } catch (error) {
         console.error('Error adding user roles:', error.message);
