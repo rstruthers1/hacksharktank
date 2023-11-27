@@ -3,8 +3,8 @@ import React from 'react';
 import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-import './CenteredForms.css';
-import {useRegisterUserMutation} from "../apis/userApi";
+import '../../common/CenteredForms.css';
+import {useRegisterUserMutation} from "../../../apis/userApi";
 import {NavLink} from "react-router-dom";
 
 const SignupForm = () => {

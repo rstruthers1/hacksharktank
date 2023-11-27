@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Pagination } from 'react-bootstrap';
-import {formatDateTimeAsDate} from "../utils/dateTimeUtils";
+import {formatDateTimeAsDate} from "../../../utils/dateTimeUtils";
 import './HackathonTable.css'
 import {Link} from "react-router-dom";
 

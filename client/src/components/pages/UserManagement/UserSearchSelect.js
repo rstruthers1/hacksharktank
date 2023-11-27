@@ -1,6 +1,6 @@
 import React from 'react';
 import AsyncSelect from 'react-select/async';
-import { useLazySearchUsersQuery } from '../apis/userApi'
+import { useLazySearchUsersQuery } from '../../../apis/userApi'
 
 const UserSearchSelect = ({ onChange, value }) => {
     const [trigger] = useLazySearchUsersQuery();

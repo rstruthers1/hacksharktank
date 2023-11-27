@@ -5,13 +5,13 @@ import {
     useCreateHackathonUserRoleMutation,
     useGetHackathonQuery,
     useGetHackathonUsersQuery
-} from "../apis/hackathonApi";
+} from "../../../apis/hackathonApi";
 import UserSearchModal from "./UserSearchModal";
 import {toast} from "react-toastify";
-import {getErrorMessage} from "../utils/errorMessageUtils";
+import {getErrorMessage} from "../../../utils/errorMessageUtils";
 import './UserManagement.css';
 import Select from "react-select";
-import {useGetHackathonRolesQuery} from "../apis/hackathonRoleApi";
+import {useGetHackathonRolesQuery} from "../../../apis/hackathonRoleApi";
 
 const UserManagement = () => {
     const {hackathonId} = useParams();

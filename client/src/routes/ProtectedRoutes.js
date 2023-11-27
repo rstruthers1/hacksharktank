@@ -1,18 +1,18 @@
 import {Navigate} from "react-router-dom";
-import Root from "./routes/root";
-import {isUserAdmin, isUserLoggedIn} from "./utils/authUtils";
+import MainMenu from "../components/layout/MainMenu/MainMenu";
+import {isUserAdmin, isUserLoggedIn} from "../utils/authUtils";
 
 const ProtectedRoutes = ({onlyAdmin= false}) => {
 
     if (isUserLoggedIn()) {
         if (onlyAdmin) {
             if (isUserAdmin()) {
-                return <Root />;
+                return <MainMenu />;
             } else {
                 return <Navigate to="/access-denied" replace />;
             }
         } else {
-            return <Root />;
+            return <MainMenu />;
         }
     }
     return <Navigate to="/access-denied" replace />;
