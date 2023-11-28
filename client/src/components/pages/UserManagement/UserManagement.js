@@ -5,7 +5,8 @@ import {
     useCreateHackathonUserRoleMutation,
     useGetHackathonQuery,
     useGetHackathonUsersQuery,
-    useDeleteHackathonUserRoleMutation
+    useDeleteHackathonUserRoleMutation,
+    useDeleteHackathonUserMutation
 } from "../../../apis/hackathonApi";
 import UserSearchModal from "./UserSearchModal";
 import {toast} from "react-toastify";
@@ -13,8 +14,11 @@ import {getErrorMessage} from "../../../utils/errorMessageUtils";
 import './UserManagement.css';
 import Select from "react-select";
 import {useGetHackathonRolesQuery} from "../../../apis/hackathonRoleApi";
+import ConfirmModalDialog from "../../common/ConfirmModalDialog";
 
 const UserManagement = () => {
+    const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
+    const [deleteHackathonUserData, setDeleteHackathonUserData] = useState(null); // [hackathonId, userId
     const {hackathonId} = useParams();
     const {
         data: hackathon,
@@ -37,6 +41,10 @@ const UserManagement = () => {
         isError: deleteHackathonUserRoleIsError,
         error: deleteHackathonUserRoleError
     }] = useDeleteHackathonUserRoleMutation();
+    const [deleteHackathonUser, {
+        isError: deleteHackathonUserIsError,
+        error: deleteHackathonUserError
+    }] = useDeleteHackathonUserMutation();
 
     const {data: hackathonRoles,
     } = useGetHackathonRolesQuery(hackathonId);
@@ -95,6 +103,15 @@ const UserManagement = () => {
         }
     }, [deleteHackathonUserRoleIsSuccess]);
 
+    useEffect(() => {
+        if (deleteHackathonUserIsError) {
+            toast.error(`Failed to delete user: ${getErrorMessage(deleteHackathonUserError)}`, {
+                    position: toast.POSITION.TOP_CENTER
+                }
+            );
+        }
+    }, [deleteHackathonUserIsError, deleteHackathonUserIsError]);
+
     const handleRoleChange = async (selectedOptions, actionMeta, userId) => {
         try {
             if (actionMeta?.action === 'remove-value') {
@@ -133,6 +150,25 @@ const UserManagement = () => {
         return hackathonRoles.map(role => ({ label: role.name, value: role.name }));
     }
 
+    const handleDeleteUserButtonPressed = (user) => {
+        try {
+            const hackathonUserData = {
+                hackathonId: hackathonId,
+                userId: user.id,
+                email: user.email
+            };
+            setDeleteHackathonUserData(hackathonUserData);
+            // pop up a confirmation dialog
+            setShowDeleteUserModal(true);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleDeleteUser = async () => {
+        setShowDeleteUserModal(false);
+        await deleteHackathonUser(deleteHackathonUserData).unwrap();
+    }
 
     return (
         <div>
@@ -154,6 +190,7 @@ const UserManagement = () => {
                                 <tr>
                                     <th>User</th>
                                     <th>Roles</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -167,6 +204,9 @@ const UserManagement = () => {
                                                 defaultValue={getUserHackathonRoles(user)}
                                                 onChange={(selectedOptions,actionMeta) => handleRoleChange(selectedOptions, actionMeta, user.id)}
                                             />
+                                        </td>
+                                        <td>
+                                            <Button variant="danger" onClick={() => {handleDeleteUserButtonPressed(user)}}>Remove User</Button>
                                         </td>
                                     </tr>
                                 ))}
@@ -186,6 +226,12 @@ const UserManagement = () => {
                     handleSelect={handleAddUser}
                 />
             }
+            <ConfirmModalDialog show={showDeleteUserModal}
+                                title="Delete User"
+                                message={`Are you sure you want to delete user ${deleteHackathonUserData?.email}?`}
+                                onConfirm={handleDeleteUser}
+                                onCancel={() => setShowDeleteUserModal(false)} />
+
         </div>
     )
 }

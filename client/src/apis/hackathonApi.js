@@ -74,6 +74,15 @@ export const hackathonApi = createApi({
             }),
             providesTags: (result, error, arg) => [{ type: 'HackathonUsers', id: arg }],
         }),
+        deleteHackathonUser: builder.mutation({
+            query: (hackathonUserData) => ({
+                url: `hackathons/${hackathonUserData.hackathonId}/users/${hackathonUserData.userId}`, // Your endpoint path
+                method: 'DELETE',
+                // Add a JWT token to the request headers if the user is logged in
+                headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: 'HackathonUsers', id: arg.hackathonId }],
+        }),
         // You can add more endpoints here
     }),
 });
@@ -85,5 +94,6 @@ export const {
     useCreateHackathonUserRoleMutation,
     useGetHackathonQuery,
     useGetHackathonUsersQuery,
-    useDeleteHackathonUserRoleMutation
+    useDeleteHackathonUserRoleMutation,
+    useDeleteHackathonUserMutation,
 } = hackathonApi;
