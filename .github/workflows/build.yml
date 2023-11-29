@@ -33,7 +33,7 @@ jobs:
           npm run build
           cd ..
 
-      - name: test
+      - name: Test
         run: |
             cd client
             npm test
