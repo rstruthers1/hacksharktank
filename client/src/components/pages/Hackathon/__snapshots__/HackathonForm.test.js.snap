@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HackathonForm should render correctly 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div
+    className="formField"
+  >
+    <label
+      htmlFor="eventName"
+    >
+      Event Name 
+      <span
+        className="required"
+      >
+        *
+      </span>
+    </label>
+    <input
+      name="eventName"
+      onBlur={[Function]}
+      onChange={[Function]}
+      type="text"
+    />
+  </div>
+  <div
+    className="formField"
+  >
+    <label
+      htmlFor="description"
+    >
+      Event Description 
+      <span
+        className="required"
+      >
+        *
+      </span>
+    </label>
+    <textarea
+      name="description"
+      onBlur={[Function]}
+      onChange={[Function]}
+    />
+    <div
+      className="note"
+    >
+      0
+      /512 characters
+    </div>
+  </div>
+  <div
+    className="formField"
+  >
+    <label
+      htmlFor="startDate"
+    >
+      Start Date 
+      <span
+        className="required"
+      >
+        *
+      </span>
+    </label>
+    <div
+      className="react-datepicker-wrapper"
+    >
+      <div
+        className="react-datepicker__input-container"
+      >
+        <input
+          className=""
+          disabled={false}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          placeholder="mm/dd/yyyy"
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    className="formField"
+  >
+    <label
+      htmlFor="endDate"
+    >
+      End Date 
+      <span
+        className="required"
+      >
+        *
+      </span>
+    </label>
+    <div
+      className="react-datepicker-wrapper"
+    >
+      <div
+        className="react-datepicker__input-container"
+      >
+        <input
+          className=""
+          disabled={false}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          placeholder="mm/dd/yyyy"
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <p>
+    <span
+      className="required"
+    >
+      *
+    </span>
+     Indicates a required field
+  </p>
+  <button
+    className="submit-btn"
+    type="submit"
+  />
+</form>
+`;

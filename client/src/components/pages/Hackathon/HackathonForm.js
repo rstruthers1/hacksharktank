@@ -9,7 +9,7 @@ const HackathonForm = ({onSubmit, submitButtonLabel, hackathon}) => {
     const validationSchema = Yup.object().shape({
         eventName: Yup.string().required('Event Name is required').min(3, 'Event Name must be at least 3 characters long').max(256, 'Event Name must be at most 256 characters long'),
         description: Yup.string().required('Description is required').min(3, 'Description must be at least 3 characters long').max(512, 'Description must be at most 512 characters long'),
-        startDate: Yup.date().required('Start Date is required').typeError('Start Date is required').min(getTodayAtMidnight(), 'Start Date must be today or later'),
+        startDate: Yup.date().required('Start Date is required').typeError('Start Date is required'),
         endDate: Yup.date().required('End Date is required').typeError('End Date is required').when('startDate', (startDate, schema) => {
             if (startDate && Array.isArray(startDate) && startDate.length > 0) {
                 try {
@@ -67,6 +67,7 @@ const HackathonForm = ({onSubmit, submitButtonLabel, hackathon}) => {
                             selected={field.value}
                             dateFormat='MM/dd/yyyy'
                             minDate={getTodayAtMidnight()}
+                            customInput={<input data-testid="startDate" type="text" />}
                         />
                     )}
                 />
@@ -84,6 +85,7 @@ const HackathonForm = ({onSubmit, submitButtonLabel, hackathon}) => {
                             selected={field.value}
                             dateFormat='MM/dd/yyyy'
                             minDate={getMinEndDate(currentStartDate)}
+                            customInput={<input data-testid="endDate" type="text" />}
                         />
                     )}
                 />
