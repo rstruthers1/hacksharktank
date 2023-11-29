@@ -70,6 +70,7 @@ exports[`HackathonForm should render correctly 1`] = `
       >
         <input
           className=""
+          data-testid="startDate"
           disabled={false}
           onBlur={[Function]}
           onChange={[Function]}
@@ -105,6 +106,7 @@ exports[`HackathonForm should render correctly 1`] = `
       >
         <input
           className=""
+          data-testid="endDate"
           disabled={false}
           onBlur={[Function]}
           onChange={[Function]}
