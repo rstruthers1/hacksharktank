@@ -172,7 +172,6 @@ const UserManagement = () => {
 
     return (
         <div>
-
             {getHackathonError ? (
                 <>Oh no, there was an error</>
             ) : getHackathonIsLoading ? (
