@@ -31,4 +31,11 @@ jobs:
           ls
           npm install
           npm run build
+          cd ..
+
+      - name: Test
+        run: |
+            cd client
+            npm test
+      
 
