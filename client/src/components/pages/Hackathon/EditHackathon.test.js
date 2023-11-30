@@ -4,7 +4,6 @@ import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { useGetHackathonQuery, useUpdateHackathonMutation } from '../../../apis/hackathonApi';
 import { getLoggedInUser } from '../../../utils/authUtils';
-import 'cross-fetch/polyfill';
 import '@testing-library/jest-dom';
 import EditHackathon from "./EditHackathon";
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import HackathonTableBase from './HackathonTableBase';
 import renderer from "react-test-renderer";
-import 'cross-fetch/polyfill';
 import '@testing-library/jest-dom';
 
 describe('HackathonTableBase', () => {
