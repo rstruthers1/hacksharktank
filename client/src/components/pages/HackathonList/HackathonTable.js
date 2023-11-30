@@ -2,6 +2,7 @@ import HackathonTableBase from './HackathonTableBase';
 import {Link} from "react-router-dom";
 import {formatDateTimeAsDate} from "../../../utils/dateTimeUtils";
 
+
 const HackathonTable = ({ hackathons }) => {
     const columns = ['ID', 'Event Name', 'Description', 'Start Date', 'End Date'];
     const linkPath = '/admin/hackathon/';

@@ -6,6 +6,8 @@ import { getLoggedInUser } from '../../../utils/authUtils';
 import {createMemoryHistory} from "history";
 import {Router} from "react-router-dom";
 import renderer from "react-test-renderer";
+import 'cross-fetch/polyfill';
+import '@testing-library/jest-dom';
 
 jest.mock('../../../apis/hackathonApi');
 jest.mock('../../../utils/authUtils');
