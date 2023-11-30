@@ -26,7 +26,6 @@ describe('GET /hackathon-roles', () => {
             .expect('Content-Type', /json/)
             .expect(200);
 
-        console.log('res.body: ', res.body)
         // Add assertions about the response
         expect(res.body).toEqual([
             { id: 1, name: 'Role 1' },
