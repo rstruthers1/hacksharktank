@@ -6,6 +6,7 @@ const authenticateToken = require("../middleware/auth");
 const {convertDateToDBFormat, getTodayAtMidnight} = require("../utils/dateTimeUtils");
 const {addHackathonUserRoles} = require("../dao/hackathonUser");
 const {getRoleIds} = require("../dao/hackathonRoles");
+const {userIsSiteAdminOrHackathonMember, userIsSiteAdminOrHasHackathonRole} = require("../utils/authUtils");
 
 const validateHackathonInput = [
     body('eventName').isLength({min: 3}).withMessage('Event name must be at least three characters long').isLength({max: 256}).withMessage('Event name must be at most 256 characters long'),
@@ -35,10 +36,85 @@ hackathonRouter.route('/hackathons').get(authenticateToken, async (req, res, nex
     }
 });
 
+hackathonRouter.route('/hackathons/users/:userId').get(authenticateToken, async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+        if (req.user.id !== parseInt(userId)) {
+            res.status(401).json({success: false, message: "Unauthorized"})
+            return;
+        }
+        const hackathons = await knex('hackathon')
+            .join('hackathon_user', 'hackathon.id', '=', 'hackathon_user.hackathonId')
+            .join('user', 'hackathon_user.userId', '=', 'user.id')
+            .leftJoin('hackathon_user_role', 'hackathon_user.id', '=', 'hackathon_user_role.hackathonUserId')
+            .leftJoin('hackathon_role', 'hackathon_user_role.hackathonRoleId', '=', 'hackathon_role.id')
+            .select('hackathon.id','hackathon.eventName', 'hackathon.description', 'hackathon.startDate',
+                'hackathon.endDate', 'hackathon_role.name as hackathonUserRoleName')
+            .where('user.id', userId);
+        const hackathonsWithUserRoleLists = hackathons.reduce((acc, hackathon) => {
+            const hackathonWithUserRoleList = acc.find(h => h.id === hackathon.id);
+            if (hackathonWithUserRoleList && hackathon.hackathonUserRoleName) {
+                hackathonWithUserRoleList.hackathonUserRoles.push(hackathon.hackathonUserRoleName);
+            } else {
+                const hackathonUserRoles = [];
+                if (hackathon.hackathonUserRoleName) {
+                    hackathonUserRoles.push(hackathon.hackathonUserRoleName);
+                }
+                acc.push({id: hackathon.id, eventName: hackathon.eventName, description: hackathon.description,
+                    startDate: hackathon.startDate, endDate: hackathon.endDate, hackathonUserRoles: hackathonUserRoles});
+            }
+            return acc;
+        }
+        , []);
+
+        res.json(hackathonsWithUserRoleLists);
+    } catch (err) {
+        next(err)
+    }
+});
+
+hackathonRouter.route('/hackathons/:hackathonId/users/:userId').get(authenticateToken, async (req, res, next) => {
+    try {
+        const hackathonId = req.params.hackathonId;
+        const authorized = await userIsSiteAdminOrHackathonMember(req, hackathonId);
+        if (!authorized)  {
+            res.status(401).json({success: false, message: "Unauthorized"})
+            return;
+        }
+        const userId = req.params.userId;
+        const hackathon = await knex('hackathon')
+            .join('hackathon_user', 'hackathon.id', '=', 'hackathon_user.hackathonId')
+            .join('user', 'hackathon_user.userId', '=', 'user.id')
+            .leftJoin('hackathon_user_role', 'hackathon_user.id', '=', 'hackathon_user_role.hackathonUserId')
+            .leftJoin('hackathon_role', 'hackathon_user_role.hackathonRoleId', '=', 'hackathon_role.id')
+            .select('hackathon.id','hackathon.eventName', 'hackathon.description', 'hackathon.startDate',
+                'hackathon.endDate', 'hackathon_role.name as hackathonUserRoleName')
+            .where('hackathon.id', hackathonId)
+            .where('user.id', userId);
+        if (!hackathon) {
+            res.status(404).json({success: false, message: "Hackathon not found"})
+            return;
+        }
+        const hackathonWithUserRoleList = hackathon.reduce((acc, hackathon) => {
+            if (hackathon.hackathonUserRoleName) {
+                acc.hackathonUserRoles.push(hackathon.hackathonUserRoleName);
+            }
+            return acc;
+        }
+        , {id: hackathon[0].id, eventName: hackathon[0].eventName, description: hackathon[0].description,
+            startDate: hackathon[0].startDate, endDate: hackathon[0].endDate, hackathonUserRoles: []});
+
+        res.json(hackathonWithUserRoleList);
+    } catch (err) {
+        next(err)
+    }
+
+});
+
 hackathonRouter.route('/hackathons/:id').get(authenticateToken, async (req, res, next) => {
     try {
-        const authUserRoles = req.user.roles;
-        if (!authUserRoles.includes('admin')) {
+        const authorized = await userIsSiteAdminOrHackathonMember(req, req.params.id);
+        if (!authorized)  {
             res.status(401).json({success: false, message: "Unauthorized"})
             return;
         }
@@ -65,7 +141,6 @@ hackathonRouter.route('/hackathons/:id').get(authenticateToken, async (req, res,
         "endDate": "2023-11-17 00:00:00"
     }
  */
-
 hackathonRouter.route('/hackathons').post(authenticateToken, async (req, res) => {
     const {eventName, description, startDate, endDate} = req.body; // assuming these are passed in the request
     try {
@@ -118,8 +193,9 @@ hackathonRouter.route('/hackathons').post(authenticateToken, async (req, res) =>
 hackathonRouter.route('/hackathons/:id').put(authenticateToken, async (req, res) => {
     const {eventName, description, startDate, endDate} = req.body;
     try {
-        const authUserRoles = req.user.roles;
-        if (!authUserRoles.includes('admin')) {
+        const hackathonId = req.params.id;
+        const authorized = await userIsSiteAdminOrHasHackathonRole(req, hackathonId, ['admin']);
+        if (!authorized)  {
             res.status(401).json({success: false, message: "Unauthorized"})
             return;
         }
@@ -149,13 +225,12 @@ hackathonRouter.route('/hackathons/:id').put(authenticateToken, async (req, res)
         };
 
         await knex('hackathon')
-            .where('id', req.params.id)
+            .where('id', hackathonId)
             .update(updatedHackathon);
-        console.log(`Hackathon updated with ID ${req.params.id}`);
         res.status(200).json({
             success: true, message: "Hackathon updated successfully.",
             hackathon: {
-                id: req.params.id,
+                id: hackathonId,
                 eventName,
                 description,
             }
@@ -174,16 +249,14 @@ sample payload
     "hackathonRoles": ["participant", "admin"]
 }
  */
-
 hackathonRouter.route('/hackathons/users/roles').post(authenticateToken, async (req, res) => {
     const {hackathonId, userId, hackathonRoles} = req.body;
     try {
-        const authUserRoles = req.user.roles;
-        if (!authUserRoles.includes('admin')) {
+        const authorized = await userIsSiteAdminOrHasHackathonRole(req, hackathonId, ['admin']);
+        if (!authorized)  {
             res.status(401).json({success: false, message: "Unauthorized"})
             return;
         }
-
         if (!hackathonId) {
             res.status(400).json({success: false, message: "Missing required field hackathonId"})
             return;
@@ -255,12 +328,11 @@ hackathonRouter.route('/hackathons/users/roles').post(authenticateToken, async (
 
 hackathonRouter.route('/hackathons/:hackathonId/users/:userId/roles/:roleName').delete(authenticateToken, async (req, res) => {
     try {
-        const authUserRoles = req.user.roles;
-        if (!authUserRoles.includes('admin')) {
+        const authorized = await userIsSiteAdminOrHasHackathonRole(req, req.params.hackathonId, ['admin']);
+        if (!authorized)  {
             res.status(401).json({success: false, message: "Unauthorized"})
             return;
         }
-
         const hackathonId = req.params.hackathonId;
         const userId = req.params.userId;
         const roleName = req.params.roleName;
@@ -308,12 +380,11 @@ hackathonRouter.route('/hackathons/:hackathonId/users/:userId/roles/:roleName').
 
 hackathonRouter.route('/hackathons/:hackathonId/users/:userId').delete(authenticateToken, async (req, res) => {
     try {
-        const authUserRoles = req.user.roles;
-        if (!authUserRoles.includes('admin')) {
+        const authorized = await userIsSiteAdminOrHasHackathonRole(req, req.params.hackathonId, ['admin']);
+        if (!authorized)  {
             res.status(401).json({success: false, message: "Unauthorized"})
             return;
         }
-
         const hackathonId = req.params.hackathonId;
         const userId = req.params.userId;
         if (!hackathonId) {
@@ -352,13 +423,12 @@ hackathonRouter.route('/hackathons/:hackathonId/users/:userId').delete(authentic
 
 hackathonRouter.route('/hackathons/:id/users').get(authenticateToken, async (req, res, next) => {
     try {
-        const authUserRoles = req.user.roles;
-        if (!authUserRoles.includes('admin')) {
+        const hackathonId = req.params.id;
+        const authorized = await userIsSiteAdminOrHackathonMember(req, hackathonId)
+        if (!authorized)  {
             res.status(401).json({success: false, message: "Unauthorized"})
             return;
         }
-
-        const hackathonId = req.params.id;
 
         const hackathonUsers = await knex('hackathon_user')
             .leftJoin('hackathon_user_role', 'hackathon_user.id', '=', 'hackathon_user_role.hackathonUserId')

@@ -18,6 +18,24 @@ export const isUserLoggedIn = () => {
 
 };
 
+export const getLoggedInUser = () => {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+        return null;
+    }
+
+    // Check if expired, else return true
+    try {
+
+        const {id, username, email} = JSON.parse(atob(token.split('.')[1])); // Decode payload
+        console.log(`id: ${id}, username: ${username}, email: ${email}`)
+        return {id, email};
+    } catch {
+        return null; // if there's an error decoding the token, consider it invalid
+    }
+}
+
 export const isUserAdmin = () => {
     const token = localStorage.getItem('token');
 

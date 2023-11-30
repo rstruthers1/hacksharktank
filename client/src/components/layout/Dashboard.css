@@ -1,6 +1,6 @@
-/* HackathonAdminDashboard.css */
+/* Dashboard.css */
 
-.admin-dashboard {
+.dashboard {
     display: flex;
     min-height: 100vh; /* Full viewport height */
     font-family: Arial, sans-serif; /* Your choice of font */
@@ -60,7 +60,7 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .admin-dashboard {
+    .dashboard {
         flex-direction: column;
     }
 
