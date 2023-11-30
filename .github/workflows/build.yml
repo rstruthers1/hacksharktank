@@ -39,5 +39,7 @@ jobs:
         run: |
             cd client
             npm test
+            cc ../server
+            npm test
       
 
