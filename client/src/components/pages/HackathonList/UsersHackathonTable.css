@@ -1,0 +1,64 @@
+/* HackathonTable.css */
+.idColumn {
+    width: 5%;
+}
+
+.eventNameColumn {
+    width: 20%;
+}
+
+.descriptionColumn {
+    width: 35%;
+}
+
+.startDateColumn {
+    width: 12%;
+}
+
+.endDateColumn {
+    width: 12%;
+}
+
+.roleColumn {
+    width: 16%;
+}
+
+
+/* HackathonTable.css */
+.table-container {
+    display: flex;
+    flex-direction: column;
+    height: 400px; /* Adjust based on your needs */
+}
+
+.table-scrollable {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.pagination-container {
+    text-align: center; /* Center align pagination controls */
+}
+
+/* HackathonTable.css */
+.search-container {
+    margin-bottom: 20px; /* Adds space between the search box and the table */
+    text-align: center; /* Centers the search box */
+}
+
+.search-container input {
+    width: 50%; /* Adjust the width as per your layout */
+    padding: 10px;
+    margin: 0 auto;
+    border: 1px solid #ddd; /* Subtle border */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft box shadow for depth */
+}
+
+.search-container input:focus {
+    outline: none; /* Removes the default focus outline */
+    border-color: #007bff; /* Highlight color when the input is focused */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Matching shadow color */
+}
+
+

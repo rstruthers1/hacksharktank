@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import '../../layout/HackathonAdminDashboard/HackathonAdminDashboard.css';
+import '../../layout/Dashboard.css';
 import {useParams} from "react-router-dom";
 import {useGetHackathonQuery, useUpdateHackathonMutation} from "../../../apis/hackathonApi";
 import HackathonForm from "./HackathonForm";
@@ -11,7 +11,6 @@ const EditHackathon = () => {
             isLoading: updateHackathonIsLoading,
             isSuccess: updateHackathonIsSuccess,
             isError: updateHackathonIsError,
-            data: updateHackathonData,
             error: updateHackathonError
         }
     ] = useUpdateHackathonMutation();
@@ -67,7 +66,7 @@ const EditHackathon = () => {
     }, [updateHackathonIsError]);
 
     return (
-        <div className="admin-dashboard">
+        <div className="dashboard">
             <main className="content">
                 {getHackathonError ? (
                     <>Oh no, there was an error</>

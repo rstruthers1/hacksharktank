@@ -30,7 +30,25 @@ export const hackathonApi = createApi({
         }),
         getHackathons: builder.query({
             query: () => ({
-                url: 'hackathons', // Your endpoint path
+                url: 'hackathons',
+                method: 'GET',
+                // Add a JWT token to the request headers if the user is logged in
+                headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
+            }),
+            providesTags: (result, error, arg) => [{ type: 'Hackathons'}],
+        }),
+        getUsersHackathons: builder.query({
+            query: (userId) => ({
+                url: `hackathons/users/${userId}`,
+                method: 'GET',
+                // Add a JWT token to the request headers if the user is logged in
+                headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
+            }),
+            providesTags: (result, error, arg) => [{ type: 'Hackathons'}],
+        }),
+        getUsersHackathon: builder.query({
+            query: ({hackathonId, userId}) => ({
+                url: `hackathons/${hackathonId}/users/${userId}`,
                 method: 'GET',
                 // Add a JWT token to the request headers if the user is logged in
                 headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
@@ -39,7 +57,7 @@ export const hackathonApi = createApi({
         }),
         getHackathon: builder.query({
             query: (hackathonId) => ({
-                url: `hackathons/${hackathonId}`, // Your endpoint path
+                url: `hackathons/${hackathonId}`,
                 method: 'GET',
                 // Add a JWT token to the request headers if the user is logged in
                 headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
@@ -91,6 +109,8 @@ export const {
     useCreateHackathonMutation,
     useUpdateHackathonMutation,
     useGetHackathonsQuery,
+    useGetUsersHackathonsQuery,
+    useGetUsersHackathonQuery,
     useCreateHackathonUserRoleMutation,
     useGetHackathonQuery,
     useGetHackathonUsersQuery,

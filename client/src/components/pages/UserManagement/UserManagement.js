@@ -37,13 +37,11 @@ const UserManagement = () => {
         error: createHackathonUserRoleError
     }] = useCreateHackathonUserRoleMutation()
     const [deleteHackathonUserRole, {
-        isSuccess: deleteHackathonUserRoleIsSuccess,
         isError: deleteHackathonUserRoleIsError,
         error: deleteHackathonUserRoleError
     }] = useDeleteHackathonUserRoleMutation();
     const [deleteHackathonUser, {
-        isError: deleteHackathonUserIsError,
-        error: deleteHackathonUserError
+
     }] = useDeleteHackathonUserMutation();
 
     const {data: hackathonRoles,
@@ -94,23 +92,6 @@ const UserManagement = () => {
         }
     }, [deleteHackathonUserRoleError, deleteHackathonUserRoleIsError]);
 
-    useEffect(() => {
-        if (deleteHackathonUserRoleIsSuccess) {
-            toast.success('Successfully deleted user role', {
-                    position: toast.POSITION.TOP_CENTER
-                }
-            );
-        }
-    }, [deleteHackathonUserRoleIsSuccess]);
-
-    useEffect(() => {
-        if (deleteHackathonUserIsError) {
-            toast.error(`Failed to delete user: ${getErrorMessage(deleteHackathonUserError)}`, {
-                    position: toast.POSITION.TOP_CENTER
-                }
-            );
-        }
-    }, [deleteHackathonUserIsError, deleteHackathonUserIsError]);
 
     const handleRoleChange = async (selectedOptions, actionMeta, userId) => {
         try {
@@ -167,7 +148,20 @@ const UserManagement = () => {
 
     const handleDeleteUser = async () => {
         setShowDeleteUserModal(false);
-        await deleteHackathonUser(deleteHackathonUserData).unwrap();
+        await deleteHackathonUser(deleteHackathonUserData)
+            .unwrap()
+            .then(() => {
+                toast.success('Successfully deleted user', {
+                        position: toast.POSITION.TOP_CENTER
+                    }
+                );
+            })
+            .catch((err) => {
+                toast.error(`Failed to delete user: ${getErrorMessage(err)}`, {
+                        position: toast.POSITION.TOP_CENTER
+                    }
+                );
+            });
     }
 
     return (

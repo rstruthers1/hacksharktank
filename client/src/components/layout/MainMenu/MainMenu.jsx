@@ -4,6 +4,7 @@ import {isUserAdmin, isUserLoggedIn, logoutUser} from "../../../utils/authUtils"
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
 
+
 export default function MainMenu() {
     const navigate = useNavigate();
 
@@ -17,7 +18,7 @@ export default function MainMenu() {
         <div>
             <Navbar bg="light" expand="lg">
                 <Container>
-                    <Navbar.Brand as={Link} to="/">MyApp</Navbar.Brand>
+                    <Navbar.Brand as={Link} to="/">Hackathon Junction</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
@@ -25,7 +26,7 @@ export default function MainMenu() {
                                 <Nav.Link>About</Nav.Link>
                             </LinkContainer>
                             {isUserAdmin() &&
-                                <NavDropdown title="Hackathon" id="basic-nav-dropdown">
+                                <NavDropdown title="Site Admin" id="basic-nav-dropdown">
                                     <LinkContainer to="/create-hackathon">
                                         <NavDropdown.Item>Create Hackathon</NavDropdown.Item>
                                     </LinkContainer>

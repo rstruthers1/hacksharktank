@@ -1,0 +1,206 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HackathonList renders correctly 1`] = `
+<div
+  className="container"
+>
+  <h1>
+    Hackathons
+  </h1>
+  <div
+    className="table-container"
+  >
+    <div
+      className="search-container"
+    >
+      <input
+        onChange={[Function]}
+        placeholder="Search by event name..."
+        type="text"
+      />
+    </div>
+    <div
+      className="table-scrollable"
+    >
+      <table
+        className="table table-bordered table-hover"
+      >
+        <thead>
+          <tr>
+            <th
+              className="IDColumn"
+            >
+              ID
+            </th>
+            <th
+              className="Event NameColumn"
+            >
+              Event Name
+            </th>
+            <th
+              className="DescriptionColumn"
+            >
+              Description
+            </th>
+            <th
+              className="Start DateColumn"
+            >
+              Start Date
+            </th>
+            <th
+              className="End DateColumn"
+            >
+              End Date
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              1
+            </td>
+            <td>
+              <a
+                href="/admin/hackathon/1/edit"
+                onClick={[Function]}
+              >
+                Test Hackathon 1
+              </a>
+            </td>
+            <td>
+              Description 1
+            </td>
+            <td>
+              12/31/2021
+            </td>
+            <td>
+              1/1/2022
+            </td>
+          </tr>
+          <tr>
+            <td>
+              2
+            </td>
+            <td>
+              <a
+                href="/admin/hackathon/2/edit"
+                onClick={[Function]}
+              >
+                Test Hackathon 2
+              </a>
+            </td>
+            <td>
+              Description 2
+            </td>
+            <td>
+              1/31/2022
+            </td>
+            <td>
+              2/1/2022
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div
+      className="pagination-container"
+    >
+      <ul
+        className="pagination"
+      >
+        <li
+          className="page-item disabled"
+        >
+          <span
+            className="page-link"
+            onClick={[Function]}
+          >
+            <span
+              aria-hidden="true"
+            >
+              «
+            </span>
+            <span
+              className="visually-hidden"
+            >
+              First
+            </span>
+          </span>
+        </li>
+        <li
+          className="page-item disabled"
+        >
+          <span
+            className="page-link"
+            onClick={[Function]}
+          >
+            <span
+              aria-hidden="true"
+            >
+              ‹
+            </span>
+            <span
+              className="visually-hidden"
+            >
+              Previous
+            </span>
+          </span>
+        </li>
+        <li
+          className="page-item active"
+        >
+          <span
+            className="page-link"
+            onClick={[Function]}
+          >
+            1
+            <span
+              className="visually-hidden"
+            >
+              (current)
+            </span>
+          </span>
+        </li>
+        <li
+          className="page-item disabled"
+        >
+          <span
+            className="page-link"
+            onClick={[Function]}
+          >
+            <span
+              aria-hidden="true"
+            >
+              ›
+            </span>
+            <span
+              className="visually-hidden"
+            >
+              Next
+            </span>
+          </span>
+        </li>
+        <li
+          className="page-item disabled"
+        >
+          <span
+            className="page-link"
+            onClick={[Function]}
+          >
+            <span
+              aria-hidden="true"
+            >
+              »
+            </span>
+            <span
+              className="visually-hidden"
+            >
+              Last
+            </span>
+          </span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+`;
