@@ -6,7 +6,8 @@ import {
     useGetHackathonQuery,
     useGetHackathonUsersQuery,
     useDeleteHackathonUserRoleMutation,
-    useDeleteHackathonUserMutation
+    useDeleteHackathonUserMutation,
+    useGetUsersHackathonQuery
 } from "../../../apis/hackathonApi";
 import UserSearchModal from "./UserSearchModal";
 import {toast} from "react-toastify";
@@ -15,6 +16,7 @@ import './UserManagement.css';
 import Select from "react-select";
 import {useGetHackathonRolesQuery} from "../../../apis/hackathonRoleApi";
 import ConfirmModalDialog from "../../common/ConfirmModalDialog";
+import {getLoggedInUser} from "../../../utils/authUtils";
 
 const UserManagement = () => {
     const [showDeleteUserModal, setShowDeleteUserModal] = useState(false);
@@ -25,6 +27,7 @@ const UserManagement = () => {
         error: getHackathonError,
         isLoading: getHackathonIsLoading
     } = useGetHackathonQuery(hackathonId);
+
     const {
         data: hackathonUsers,
         error: getHackathonUsersError,
@@ -46,6 +49,11 @@ const UserManagement = () => {
 
     const {data: hackathonRoles,
     } = useGetHackathonRolesQuery(hackathonId);
+
+    const {data: usersHackathon,
+        error: getUsersHackathonError,
+        isLoading: getUsersHackathonIsLoading
+    } = useGetUsersHackathonQuery({hackathonId, userId: getLoggedInUser()?.id});
 
     const [modalOpen, setModalOpen] = useState(false); // State to track whether the modal is open
     const openModal = () => setModalOpen(true);
@@ -164,17 +172,31 @@ const UserManagement = () => {
             });
     }
 
+    const isLoggedInUserHackathonAdmin = () => {
+        if (!usersHackathon || !usersHackathon.hackathonUserRoles || !Array.isArray(usersHackathon.hackathonUserRoles)) {
+            return false;
+        }
+        return usersHackathon.hackathonUserRoles.includes("admin");
+    }
+
+
     return (
         <div>
-            {getHackathonError ? (
+            {getHackathonError || getUsersHackathonError ? (
                 <>Oh no, there was an error</>
-            ) : getHackathonIsLoading ? (
+            ) : getHackathonIsLoading || getUsersHackathonIsLoading ? (
                 <>Loading...</>
             ) : hackathon ? (
                 <div>
                     <h1>{hackathon.eventName}</h1>
-                    <h2>Manage Users</h2>
-                    <Button onClick={openModal}>Add User</Button>
+
+                    {isLoggedInUserHackathonAdmin() ?
+                        <>
+                        <h2>Manage Users</h2>
+                        <Button onClick={openModal}>Add User</Button>
+                        </> :
+                        <h2>Hackathon Users</h2>
+                    }
                     {createHackathonUserRoleIsLoading && <p>Adding user...</p>}
                     <div className="user-management">
                         {hackathonUsers &&
@@ -183,7 +205,9 @@ const UserManagement = () => {
                                 <tr>
                                     <th>User</th>
                                     <th>Roles</th>
-                                    <th></th>
+                                    {isLoggedInUserHackathonAdmin() &&
+                                        <th></th>
+                                    }
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -191,16 +215,21 @@ const UserManagement = () => {
                                     <tr key={user.id}>
                                         <td>{user.email}</td>
                                         <td>
+                                            {isLoggedInUserHackathonAdmin() ?
                                             <Select
                                                 options={allHackathonRoles()}
                                                 isMulti
                                                 defaultValue={getUserHackathonRoles(user)}
                                                 onChange={(selectedOptions,actionMeta) => handleRoleChange(selectedOptions, actionMeta, user.id)}
+                                                isDisabled={!isLoggedInUserHackathonAdmin()}
                                             />
+                                                : <div>{getUserHackathonRoles(user).map(role => role.label).join(', ')}</div>}
                                         </td>
-                                        <td>
-                                            <Button variant="danger" onClick={() => {handleDeleteUserButtonPressed(user)}}>Remove User</Button>
-                                        </td>
+                                        {isLoggedInUserHackathonAdmin() &&
+                                            <td>
+                                                <Button variant="danger" onClick={() => {handleDeleteUserButtonPressed(user)}}>Remove User</Button>
+                                            </td>
+                                        }
                                     </tr>
                                 ))}
                                 </tbody>

@@ -8,7 +8,8 @@ import {
     useGetHackathonQuery,
     useGetHackathonUsersQuery,
     useDeleteHackathonUserRoleMutation,
-    useDeleteHackathonUserMutation
+    useDeleteHackathonUserMutation,
+    useGetUsersHackathonQuery
 } from "../../../apis/hackathonApi";
 import {useGetHackathonRolesQuery} from "../../../apis/hackathonRoleApi";
 import { useLazySearchUsersQuery } from '../../../apis/userApi';
@@ -24,6 +25,7 @@ jest.mock("../../../apis/hackathonApi", () => ({
     useCreateHackathonUserRoleMutation: jest.fn(),
     useDeleteHackathonUserRoleMutation: jest.fn(),
     useDeleteHackathonUserMutation: jest.fn(),
+    useGetUsersHackathonQuery: jest.fn(),
 }));
 
 jest.mock("../../../apis/userApi", () => ({
@@ -33,6 +35,39 @@ jest.mock("../../../apis/userApi", () => ({
 jest.mock("../../../apis/hackathonRoleApi", () => ({
     useGetHackathonRolesQuery: jest.fn(),
 }));
+
+function mockUserIsHackathonAdmin() {
+    useGetUsersHackathonQuery.mockReturnValue({
+        data: {
+            "id": 1,
+            "eventName": "Test Hackathon",
+            "description": "This is a test hackathon",
+            "startDate": "2023-12-05T05:00:00.000Z",
+            "endDate": "2023-12-22T06:00:00.000Z",
+            "hackathonUserRoles": [
+                "admin",
+                "participant"
+            ]
+        },
+        error: null,
+    });
+}
+
+function mockUserIsHackathonParticipant() {
+    useGetUsersHackathonQuery.mockReturnValue({
+        data: {
+            "id": 1,
+            "eventName": "Test Hackathon",
+            "description": "This is a test hackathon",
+            "startDate": "2023-12-05T05:00:00.000Z",
+            "endDate": "2023-12-22T06:00:00.000Z",
+            "hackathonUserRoles": [
+                "participant"
+            ]
+        },
+        error: null,
+    });
+}
 
 describe('UserManagement', () => {
     beforeEach(() => {
@@ -51,6 +86,7 @@ describe('UserManagement', () => {
             data: [{name: 'participant'}],
         });
 
+
         useLazySearchUsersQuery.mockReturnValue([jest.fn(), {
             data: [{id: '1', email: 'foo@example.com'}],
             error: null,
@@ -61,19 +97,30 @@ describe('UserManagement', () => {
     });
 
     it('renders without crashing', () => {
+        mockUserIsHackathonAdmin();
         render(<UserManagement/>);
         expect(screen.getByText('Test Hackathon')).toBeInTheDocument();
         expect(screen.getByText('Manage Users')).toBeInTheDocument();
     });
 
     it('renders a list of users', () => {
+        mockUserIsHackathonAdmin();
         render(<UserManagement/>);
         expect(screen.getByText('Test Hackathon')).toBeInTheDocument();
         expect(screen.getByText('Manage Users')).toBeInTheDocument();
         expect(screen.getByText('test@example.com')).toBeInTheDocument();
     });
 
+    it('renders a list of users for a participant', () => {
+        mockUserIsHackathonParticipant();
+        render(<UserManagement/>);
+        expect(screen.getByText('Test Hackathon')).toBeInTheDocument();
+        expect(screen.getByText('Hackathon Users')).toBeInTheDocument();
+
+    });
+
     it('matches the snapshot', () => {
+        mockUserIsHackathonAdmin();
         const tree = renderer.create(<UserManagement/>).toJSON();
         expect(tree).toMatchSnapshot();
     });
