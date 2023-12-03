@@ -24,18 +24,13 @@ import EditHackathon from "./components/pages/Hackathon/EditHackathon";
 import UserManagement from "./components/pages/UserManagement/UserManagement";
 import StayLoggedInPrompt from "./components/pages/Auth/StayLoggedInPrompt";
 import HackathonDashboard from "./components/layout/HackathonDashboard/HackathonDashboard";
+import AboutHackathon from "./components/pages/AboutHackathon/AboutHackathon";
 
 // set timeout to 1 hour
 const timeout = 3_600_000
 
 // set prompt before idle to 1 minute
 const promptBeforeIdle = 60_000
-
-
-function ViewHackathon() {
-    return null;
-}
-
 
 export function App() {
     const [stayLoggedInPromptModalOpen, setStayLoggedInPromptModalOpen] = useState(false)
@@ -108,7 +103,7 @@ export function App() {
                 {path: "/dashboard/hackathon/:hackathonId", element: <HackathonDashboard/>,
                     children: [
                         {path: 'edit', element: <EditHackathon/>},
-                        {path: 'view', element: <ViewHackathon/>},
+                        {path: 'about', element: <AboutHackathon/>},
                         {path: 'users', element: <UserManagement/>},
                     ]
                 },

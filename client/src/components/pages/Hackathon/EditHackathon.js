@@ -72,12 +72,12 @@ const EditHackathon = () => {
                     <>Oh no, there was an error</>
                 ) : getHackathonIsLoading ? (
                     <>Loading...</>
-                ) : hackathon ? (
+                ) : hackathon && (
                     <div>
                         <h1>{hackathon.eventName}</h1>
                         <HackathonForm hackathon={hackathon} onSubmit={onSubmit} submitButtonLabel="Update Hackathon"/>
                         {updateHackathonIsLoading && <p>Updating...</p>}
-                    </div>) : null}
+                    </div>) }
             </main>
         </div>
     );

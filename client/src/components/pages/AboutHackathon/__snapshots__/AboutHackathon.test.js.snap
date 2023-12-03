@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AboutHackathon should render correctly 1`] = `
+<div
+  className="specific-hackathon"
+>
+  Loading...
+</div>
+`;

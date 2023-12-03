@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`About should render correctly 1`] = `
+<div
+  className="about-hackathon"
+>
+  <section
+    className="intro"
+  >
+    <h1>
+      About Hackathon Junction
+    </h1>
+    <p>
+      Welcome to the hub of innovation and creativity where coders, designers, and innovators come together to solve challenging problems and build amazing projects in a collaborative environment.
+    </p>
+  </section>
+  <section
+    className="what-to-expect"
+  />
+  <section
+    className="faqs"
+  >
+    <h2>
+      FAQs
+    </h2>
+    <p>
+      Currently, this is just a coding exercise.
+    </p>
+  </section>
+</div>
+`;
