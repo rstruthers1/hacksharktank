@@ -15,11 +15,12 @@ const HackathonDashboard = () => {
                 {isLoading ? <div>Loading...</div> :
                     hackathon?.hackathonUserRoles?.some(role => role === 'admin') ?
                         <>
+                            <NavLink to={`/dashboard/hackathon/${hackathonId}/about`}>About Hackathon</NavLink>
                             <NavLink to={`/dashboard/hackathon/${hackathonId}/edit`}>Edit Hackathon</NavLink>
                             <NavLink to={`/dashboard/hackathon/${hackathonId}/users`}>Manage Users</NavLink>
                         </> :
                         <>
-                            <NavLink to={`/dashboard/hackathon/${hackathonId}/view`}>View Hackathon</NavLink>
+                            <NavLink to={`/dashboard/hackathon/${hackathonId}/about`}>About Hackathon</NavLink>
                             <NavLink to={`/dashboard/hackathon/${hackathonId}/users`}>View Users</NavLink>
                         </>
                 }

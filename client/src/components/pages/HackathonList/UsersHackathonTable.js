@@ -9,7 +9,7 @@ const UsersHackathonTable = ({ hackathons }) => {
     const renderRow = (hackathon) => (
         <tr key={hackathon.id}>
             <td>{hackathon.id}</td>
-            <td><Link to={`${linkPath}${hackathon.id}`}>{hackathon.eventName}</Link></td>
+            <td><Link to={`${linkPath}${hackathon.id}/about`}>{hackathon.eventName}</Link></td>
             <td>{hackathon.description}</td>
             <td>{formatDateTimeAsDate(hackathon.startDate)}</td>
             <td>{formatDateTimeAsDate(hackathon.endDate)}</td>

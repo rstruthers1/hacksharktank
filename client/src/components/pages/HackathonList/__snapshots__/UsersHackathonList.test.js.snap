@@ -67,7 +67,7 @@ Array [
               </td>
               <td>
                 <a
-                  href="/dashboard/hackathon/1"
+                  href="/dashboard/hackathon/1/about"
                   onClick={[Function]}
                 >
                   Test Hackathon 1
@@ -97,7 +97,7 @@ Array [
               </td>
               <td>
                 <a
-                  href="/dashboard/hackathon/2"
+                  href="/dashboard/hackathon/2/about"
                   onClick={[Function]}
                 >
                   Test Hackathon 2
