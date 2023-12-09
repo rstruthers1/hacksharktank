@@ -25,6 +25,7 @@ import UserManagement from "./components/pages/UserManagement/UserManagement";
 import StayLoggedInPrompt from "./components/pages/Auth/StayLoggedInPrompt";
 import HackathonDashboard from "./components/layout/HackathonDashboard/HackathonDashboard";
 import AboutHackathon from "./components/pages/AboutHackathon/AboutHackathon";
+import Ideas from "./components/pages/Ideas/Ideas";
 
 // set timeout to 1 hour
 const timeout = 3_600_000
@@ -105,6 +106,7 @@ export function App() {
                         {path: 'edit', element: <EditHackathon/>},
                         {path: 'about', element: <AboutHackathon/>},
                         {path: 'users', element: <UserManagement/>},
+                        {path: 'ideas', element: <Ideas/>},
                     ]
                 },
             ]

@@ -8,6 +8,7 @@ const HackathonAdminDashboard = () => {
     return (
         <div className="dashboard">
             <aside className="sidebar">
+                <div className="menu-header">Site Admin</div>
                 <NavLink to={`/admin/hackathon/${hackathonId}/edit`}>Edit Hackathon</NavLink>
                 <NavLink to={`/admin/hackathon/${hackathonId}/users`}>Manage Users</NavLink>
                 {/* Additional links */}

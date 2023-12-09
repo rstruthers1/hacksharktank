@@ -6,6 +6,7 @@ require('dotenv').config()
 const userRouter = require('./routes/userRouter')
 const hackathonRouter = require('./routes/hackathonRouter');
 const hackathonRoleRouter = require('./routes/hackathonRoleRouter');
+const hackathonIdeaRouter = require('./routes/hackathonIdeaRouter');
 
 
 const STATIC_FOLDER = path.join(__dirname, "../", "../", "client/", "build/");
@@ -20,6 +21,7 @@ app.use(cors());
 app.use('/', userRouter);
 app.use('/', hackathonRouter);
 app.use('/', hackathonRoleRouter);
+app.use('/', hackathonIdeaRouter);
 app.get("/myvar",(_, res) => res.json({MY_VAR: myVar}))
 
 

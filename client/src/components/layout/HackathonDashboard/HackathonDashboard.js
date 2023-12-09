@@ -13,18 +13,24 @@ const HackathonDashboard = () => {
         <div className="dashboard">
             <aside className="sidebar">
                 {isLoading ? <div>Loading...</div> :
-                    hackathon?.hackathonUserRoles?.some(role => role === 'admin') ?
-                        <>
-                            <NavLink to={`/dashboard/hackathon/${hackathonId}/about`}>About Hackathon</NavLink>
-                            <NavLink to={`/dashboard/hackathon/${hackathonId}/edit`}>Edit Hackathon</NavLink>
-                            <NavLink to={`/dashboard/hackathon/${hackathonId}/users`}>Manage Users</NavLink>
-                        </> :
-                        <>
-                            <NavLink to={`/dashboard/hackathon/${hackathonId}/about`}>About Hackathon</NavLink>
-                            <NavLink to={`/dashboard/hackathon/${hackathonId}/users`}>View Users</NavLink>
-                        </>
+                    <>
+                    <div className="menu-header">{hackathon?.eventName}</div>
+                        <NavLink to={`/dashboard/hackathon/${hackathonId}/about`}>About Hackathon</NavLink>
+                        <NavLink to={`/dashboard/hackathon/${hackathonId}/ideas`}>Ideas</NavLink>
+                        {hackathon?.hackathonUserRoles?.some(role => role === 'admin') ?
+                            <>
+
+                                <NavLink to={`/dashboard/hackathon/${hackathonId}/edit`}>Edit Hackathon</NavLink>
+                                <NavLink to={`/dashboard/hackathon/${hackathonId}/users`}>Manage Users</NavLink>
+                            </> :
+                            <>
+                                <NavLink to={`/dashboard/hackathon/${hackathonId}/users`}>View Users</NavLink>
+                            </>
+
+                        }
+                   </>
                 }
-                {/* Additional links */}
+
             </aside>
             <main className="content">
                 <Outlet/> {/* Child routes will render here */}
