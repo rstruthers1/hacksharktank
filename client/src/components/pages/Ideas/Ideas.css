@@ -1,0 +1,17 @@
+
+.ql-container {
+    border-bottom-left-radius: .25rem;
+    border-bottom-right-radius: .25rem;
+    border: 1px solid #ced4da; /* Bootstrap's default border color */
+}
+
+.ql-toolbar {
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+    border: 1px solid #ced4da;
+    border-bottom: none; /* Remove the bottom border to merge with the container */
+}
+
+.submit-btn {
+    margin-top: 1rem;
+}

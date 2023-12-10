@@ -1,6 +1,6 @@
 import {Container} from "react-bootstrap";
 import UsersHackathonList from "../HackathonList/UsersHackathonList";
-import {getLoggedInUser} from "../../../utils/authUtils";
+import {getLoggedInUser, isUserLoggedIn} from "../../../utils/authUtils";
 
 const Home = () => {
     const loggedInUser = getLoggedInUser();
@@ -8,7 +8,7 @@ const Home = () => {
     return (
         <Container>
             <h1>Hackathon Junction</h1>
-            {loggedInUser &&
+            {isUserLoggedIn() && loggedInUser &&
                 <>
                     <p>Welcome, {loggedInUser?.email}!</p>
                     <UsersHackathonList/>
