@@ -39,7 +39,7 @@ const IdeaForm = ({submitIdea}) => {
             <Form.Group controlId="ideaDescription">
                 <Form.Label>Description</Form.Label>
                 <div id="Description">
-                 <ReactQuill theme="snow" onChange={handleDescriptionChange}/>
+                 <ReactQuill theme="snow" onChange={handleDescriptionChange} id="Description"/>
                 </div>
                 {errors.description && <p className="text-danger">{errors.description.message}</p>}
             </Form.Group>
