@@ -26,10 +26,20 @@ export const hackathonIdeaApi = createApi({
                 }),
                 invalidatesTags: (result, error, arg) => [{ type: 'HackathonIdeas'}],
             }),
+        deleteHackathonIdea: builder.mutation({
+            query: ({hackathonId, ideaId}) => ({
+                url: `hackathons/${hackathonId}/ideas/${ideaId}`,
+                method: 'DELETE',
+                // Add a JWT token to the request headers if the user is logged in
+                headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: 'HackathonIdeas'}],
+        }),
     })
 });
 
 export const {
     useGetHackathonIdeasQuery,
-    useCreateHackathonIdeaMutation
+    useCreateHackathonIdeaMutation,
+    useDeleteHackathonIdeaMutation
 } = hackathonIdeaApi;
