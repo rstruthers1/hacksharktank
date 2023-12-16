@@ -1,10 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { Form, Button } from 'react-bootstrap';
 import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // import styles
+import 'react-quill/dist/quill.snow.css';
+import {useCreateHackathonIdeaMutation} from "../../../apis/hackathonIdeaApi";
+import {toast} from "react-toastify";
+import {getErrorMessage} from "../../../utils/errorMessageUtils";
+import {getLoggedInUser} from "../../../utils/authUtils";
 
 // Yup schema for validation
 const schema = yup.object().shape({
@@ -12,18 +16,35 @@ const schema = yup.object().shape({
     description: yup.string().required('Description is required').min(3, 'Description must be at least 3 characters').max(512, 'Description cannot exceed 512 characters'),
 });
 
-const IdeaForm = ({submitIdea}) => {
-    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm({
+const IdeaForm = ({hackathonId}) => {
+    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
     });
+    const [createHackathonIdea] = useCreateHackathonIdeaMutation();
+    const [quillContent, setQuillContent] = useState(''); // Local state to track Quill content
 
-    const onSubmit = data => {
-        submitIdea(data);
+    const onSubmit = async data => {
+        const hackathonData = {
+            userId: getLoggedInUser()?.id,
+            title: data.title,
+            description: data.description
+        };
+
+        try {
+            await createHackathonIdea({hackathonId, data: hackathonData}).unwrap();
+            toast.success("Idea submitted successfully");
+            reset();
+            setQuillContent('');
+        } catch (err) {
+            toast.error(`Error submitting idea ${getErrorMessage(err)}`);
+        }
     };
+
 
     // Update description length
     const handleDescriptionChange = (content) => {
         setValue('description', content);
+        setQuillContent(content);
     };
 
     return (
@@ -39,7 +60,11 @@ const IdeaForm = ({submitIdea}) => {
             <Form.Group controlId="ideaDescription">
                 <Form.Label>Description</Form.Label>
                 <div id="Description">
-                 <ReactQuill theme="snow" onChange={handleDescriptionChange} id="Description"/>
+                 <ReactQuill
+                     theme="snow"
+                     value={quillContent}
+                     onChange={handleDescriptionChange}
+                     id="Description"/>
                 </div>
                 {errors.description && <p className="text-danger">{errors.description.message}</p>}
             </Form.Group>
