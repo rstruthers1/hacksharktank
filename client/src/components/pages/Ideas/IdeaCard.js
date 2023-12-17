@@ -53,6 +53,7 @@ const IdeaCard = ({idea}) => {
                 <MdDelete
                     style={deleteIconStyle}
                     onClick={handleDeleteClicked}
+                    data-testid="delete-icon"
                 />
 
             </Card.Header>
