@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IdeaCard Component should render correctly 1`] = `
+<div
+  className="mb-3 card"
+>
+  <div
+    className="card-header"
+  >
+    Test Idea
+    <svg
+      fill="currentColor"
+      height="1em"
+      onClick={[Function]}
+      stroke="currentColor"
+      strokeWidth="0"
+      style={
+        Object {
+          "color": "black",
+          "cursor": "pointer",
+          "float": "right",
+        }
+      }
+      viewBox="0 0 24 24"
+      width="1em"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M0 0h24v24H0z"
+        fill="none"
+      />
+      <path
+        d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+      />
+    </svg>
+  </div>
+  <div
+    className="card-body"
+  >
+    <p
+      className="card-text"
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": "<p>Test Description</p>",
+        }
+      }
+    />
+  </div>
+</div>
+`;
