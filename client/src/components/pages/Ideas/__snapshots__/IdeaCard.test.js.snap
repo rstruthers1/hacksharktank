@@ -9,6 +9,7 @@ exports[`IdeaCard Component should render correctly 1`] = `
   >
     Test Idea
     <svg
+      data-testid="delete-icon"
       fill="currentColor"
       height="1em"
       onClick={[Function]}
