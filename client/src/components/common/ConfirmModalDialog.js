@@ -1,6 +1,6 @@
 import {Button, Modal} from "react-bootstrap";
 
-const ConfirmModalDialog = ({show, title, message, onConfirm, onCancel}) => {
+const ConfirmModalDialog = ({show, title, message, onConfirm, onCancel, confirmLabel='Confirm'}) => {
     return (
         <Modal show={show} onHide={onCancel}>
             <Modal.Header>
@@ -13,7 +13,7 @@ const ConfirmModalDialog = ({show, title, message, onConfirm, onCancel}) => {
 
             <Modal.Footer>
                 <Button variant="secondary" onClick={onCancel}>Cancel</Button>
-                <Button variant="primary" onClick={onConfirm}>Confirm</Button>
+                <Button variant="primary" onClick={onConfirm}>{confirmLabel}</Button>
             </Modal.Footer>
         </Modal>
     )

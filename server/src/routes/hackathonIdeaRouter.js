@@ -36,8 +36,9 @@ hackathonIdeaRouter.route('/hackathons/:hackathonId/ideas').get(authenticateToke
                 'hackathon_idea.description',
                 'hackathon_idea.createdAt',
                 'hackathon_idea.updatedAt',
-                'hackathon_user.userId')
-        res.json(hackathonIdeas.map(hackathonIdea => {
+                'hackathon.id as hackathonId',
+                'user.id as userId')
+        const ideasToReturn = hackathonIdeas.map(hackathonIdea => {
             return {
                 id: hackathonIdea.id,
                 title: hackathonIdea.title,
@@ -46,9 +47,9 @@ hackathonIdeaRouter.route('/hackathons/:hackathonId/ideas').get(authenticateToke
                 updatedAt: hackathonIdea.updatedAt,
                 hackathonId: hackathonIdea.hackathonId,
                 userId: hackathonIdea.userId
-            }
+            }});
+        res.json(ideasToReturn);
 
-        }));
     } catch (err) {
         console.log(err);
         res.status(500).json({error: 'Something went wrong'});
@@ -92,6 +93,41 @@ hackathonIdeaRouter.route('/hackathons/:hackathonId/ideas').post(authenticateTok
     } catch (err) {
         console.log(err);
         res.status(500).json({error: 'Something went wrong', message: err.message});
+    }
+});
+
+
+hackathonIdeaRouter.route('/hackathons/:hackathonId/ideas/:ideaId').delete(authenticateToken, async (req, res) => {
+    try {
+        const {hackathonId, ideaId} = req.params;
+
+        // get the logged-in user
+        const authUserId = req.user.id;
+
+        // check to see if logged-in user created the idea
+        const hackathonIdea = await knex('hackathon_idea')
+            .join('hackathon_user', 'hackathon_idea.hackathonUserId', 'hackathon_user.id')
+            .join('hackathon', 'hackathon_user.hackathonId', 'hackathon.id')
+            .join('user', 'hackathon_user.userId', 'user.id')
+            .where('hackathon.id', hackathonId)
+            .where('hackathon_idea.id', ideaId)
+            .where('user.id', authUserId)
+            .first();
+
+       // if the idea was not created by the logged-in user, then return an error
+        if (!hackathonIdea) {
+            res.status(401).json({success: false, message: "Unauthorized"})
+            return;
+        }
+
+        const hackathonIdeaDeleteResult = await knex('hackathon_idea')
+            .where({id: ideaId})
+            .del()
+            .returning('*');
+        res.json({success: true});
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({error: 'Something went wrong'});
     }
 });
 

@@ -1,10 +1,11 @@
 import React from 'react';
 import { useGetHackathonIdeasQuery} from "../../../apis/hackathonIdeaApi";
 import 'react-quill/dist/quill.snow.css';
-import { Card, Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import './Ideas.css';
 import {useParams} from "react-router-dom";
 import IdeaForm from "./IdeaForm";
+import IdeaCard from "./IdeaCard";
 
 
 const IdeasPage = () => {
@@ -15,12 +16,7 @@ const IdeasPage = () => {
     const renderIdeasList = () => {
         if (!ideas || !Array.isArray(ideas)) return null;
         return ideas.map((idea, index) => (
-            <Card key={index} className="mb-3">
-                <Card.Body>
-                    <Card.Title>{idea.title}</Card.Title>
-                    <Card.Text dangerouslySetInnerHTML={{ __html: idea.description }} />
-                </Card.Body>
-            </Card>
+           <IdeaCard key={index} idea={idea} />
         ));
     };
 
