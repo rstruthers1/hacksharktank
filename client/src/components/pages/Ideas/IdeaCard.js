@@ -62,6 +62,7 @@ const IdeaCard = ({idea}) => {
                         <MdDelete
                             style={deleteIconStyle} // Style for delete icon
                             onClick={handleDeleteClicked}
+                            data-testid="delete-icon"
                         />
                     </span>
                 </Card.Header>
