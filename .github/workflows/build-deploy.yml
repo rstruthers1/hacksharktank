@@ -56,7 +56,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           source: "server,client/build"
-          target: "/home/github/hacksharktank"
+          target: "/home/github/hack-team-hub"
 
       - name: Start web server
         uses: appleboy/ssh-action@master
@@ -68,7 +68,7 @@ jobs:
           script: |
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            cd hacksharktank
+            cd hack-team-hub
             pm2 start --update-env my-app
 
 
