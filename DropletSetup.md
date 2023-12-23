@@ -28,12 +28,10 @@ Got the domain name from godaddy.com: hackteamhub.com
 * Create a Droplet
   * Ubuntu 20.04 (LTS) x64
   * Standard
-  * $5/mo
   * Datacenter Region: New York
   * Use bare minimum resources for now
   * Set root password
   * Name: hack-team-hub-droplet
-  * Click Create Droplet
   * Add improved metrics monitoring and alerting (free)
 * Press Create Droplet
 * Wait for it to be created
@@ -50,14 +48,14 @@ usermod -a -G sudo github
 Log out of the droplet
 
 ## Create SSH keys
-Log into the droplet via web console using user github
+Log into the droplet via web console using user `github`
 
 Start SSH for this user and Droplet IP. Replace DROPLET_IP with the ipv4 address of the droplet:
 ```shell  
 $ ssh github@DROPLET_IP
 ```
 
-Type in yes when prompted to add the host to the list of known hosts. Then enter the password for the github user.
+Type in yes when prompted to add the host to the list of known hosts. Then enter the password for the `github` user.
 
 Generate the public and private keys:
 ```shell
@@ -111,9 +109,9 @@ cat ~/.ssh/id_rsa
 
 Go to your repository, navigate to the secrets/actions section, and add the three following key values:
 
-SSH_HOST=YOUR_DROPLET_IP
-SSH_KEY=COPIED_PRIVATE_KEY
-SSH_USERNAME=github
+* SSH_HOST=YOUR_DROPLET_IP
+* SSH_KEY=COPIED_PRIVATE_KEY
+* SSH_USERNAME=github
 
 ## DNS
 In Digital Ocean, go to you project and click on Create -> Domain/DNS
@@ -124,11 +122,11 @@ Click on Add Domain
 
 Add two 'A' name records.
 
-A name record one:
+**A name record one:**
 * hostname: @
 * directs to: DROPLET IP
 
-A name record two:
+**A name record two:**
 * hostname: www
 * directs to: DROPLET IP
 
@@ -141,7 +139,7 @@ sudo apt update
 sudo apt install nodejs
 ```
 
-This will install an old version of node, and so let's also install nvm so that we can switch to something a little newer like 18.04:
+This will install an old version of node. Install nvm and switch to a newer version of node:
 ```shell
 curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 source ~/.profile
@@ -156,7 +154,6 @@ mkdir ~/hack-team-hub
 cd ~/hack-team-hub
 npm init -y
 npm install express
-
 ```
 
 Create file index.js:
@@ -289,12 +286,12 @@ pm2 delete my-app
 pm2 save --force
 ```
 
-The pm2 command to start the app installed by GitHub actions
+Run pm2 command to start the app installed by GitHub actions
 ```shell
 cd ~/hack-team-hub
 pm2 start server/src/index.js --name my-app --update-env
 pm2 save
-pm2 stop my-app
+pm2 stop my-app # the deploy job will restart the app
 ```
 
 
