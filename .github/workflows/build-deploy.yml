@@ -70,7 +70,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           envs: MY_VAR,DB_URL,JWT_SECRET
           script: |
-            echo "*** MY_VAR = $MY_VAR"
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
             cd hack-team-hub
