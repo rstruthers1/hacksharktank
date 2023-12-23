@@ -282,6 +282,23 @@ sudo certbot --nginx
 3. Choose option 2: Secure - Make all requests redirect to secure HTTPS access
 4. Go to your webserver in a browser. You should "Hello World!" displayed.
 
+## Have pm2 start the app after GitHub action deploys it
+Delete my-app
+```shell
+pm2 delete my-app
+pm2 save --force
+```
+
+The pm2 command to start the app installed by GitHub actions
+```shell
+cd ~/hack-team-hub
+pm2 start server/src/index.js --name my-app --update-env
+pm2 save
+pm2 stop my-app
+```
+
+
+
 
 
 
