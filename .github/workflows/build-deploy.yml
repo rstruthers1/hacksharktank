@@ -64,8 +64,11 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          all_envs: true
+          envs: MY_VAR,DB_URL,JWT_SECRET
           script: |
+            export JWT_SECRET=${{ secrets.JWT_SECRET }}
+            export DB_URL=${{ secrets.DB_URL }}
+            export MY_VAR=${{ secrets.MY_VAR }}
             echo "*** MY_VAR = $MY_VAR"
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
