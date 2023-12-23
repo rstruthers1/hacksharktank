@@ -56,19 +56,24 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: 22
           source: "server,client/build"
-          target: "/home/github/hacksharktank"
+          target: "/home/github/hack-team-hub"
 
       - name: Start web server
         uses: appleboy/ssh-action@master
+        env:
+          MY_VAR: ${{ secrets.MY_VAR }}
+          DB_URL: ${{ secrets.DB_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}  
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          envs: MY_VAR, DB_URL, JWT_SECRET
+          envs: MY_VAR,DB_URL,JWT_SECRET
           script: |
+            echo "*** MY_VAR = $MY_VAR"
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            cd hacksharktank
+            cd hack-team-hub
             pm2 start --update-env my-app
 
 
