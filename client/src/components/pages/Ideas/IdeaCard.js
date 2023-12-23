@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Card} from "react-bootstrap";
-import { MdDelete } from 'react-icons/md';
+import {MdDelete, MdEdit} from 'react-icons/md';
 import {getLoggedInUser} from "../../../utils/authUtils";
 import ConfirmModalDialog from "../../common/ConfirmModalDialog";
 import {useDeleteHackathonIdeaMutation} from "../../../apis/hackathonIdeaApi";
@@ -18,7 +18,6 @@ const IdeaCard = ({idea}) => {
     const deleteIconStyle = {
         cursor: isDeleteDisabled() ? 'default' : 'pointer',
         color: isDeleteDisabled() ? '#CCCCCC' : 'black', // Grey color for disabled state
-        float: 'right'
     };
 
     const deleteConfirmed = async () => {
@@ -45,22 +44,31 @@ const IdeaCard = ({idea}) => {
         setShowDeleteModal(true);
     }
 
+    const handleEditClicked = (ev) => {
+        ev.preventDefault();
+
+    }
+
     return (
         <>
-        <Card className="mb-3">
-            <Card.Header>
-                {idea.title}
-                <MdDelete
-                    style={deleteIconStyle}
-                    onClick={handleDeleteClicked}
-                    data-testid="delete-icon"
-                />
-
-            </Card.Header>
-            <Card.Body>
-                <Card.Text dangerouslySetInnerHTML={{ __html: idea.description }} />
-            </Card.Body>
-        </Card>
+            <Card className="mb-3">
+                <Card.Header>
+                    {idea.title}
+                    <span style={{float: 'right'}}> {/* Container for the icons */}
+                        <MdEdit
+                            style={{cursor: 'pointer', marginRight: '5px'}} // Style for edit icon
+                            onClick={handleEditClicked}
+                        />
+                        <MdDelete
+                            style={deleteIconStyle} // Style for delete icon
+                            onClick={handleDeleteClicked}
+                        />
+                    </span>
+                </Card.Header>
+                <Card.Body>
+                    <Card.Text dangerouslySetInnerHTML={{__html: idea.description}}/>
+                </Card.Body>
+            </Card>
             <ConfirmModalDialog
                 show={showDeleteModal}
                 title="Delete Idea"
@@ -71,7 +79,7 @@ const IdeaCard = ({idea}) => {
                 }}
                 confirmLabel='Delete'
                 onCancel={() => setShowDeleteModal(false)}/>
-            </>
+        </>
     );
 }
 
