@@ -26,6 +26,16 @@ export const hackathonIdeaApi = createApi({
                 }),
                 invalidatesTags: (result, error, arg) => [{ type: 'HackathonIdeas'}],
             }),
+        updateHackathonIdea: builder.mutation({
+            query: (hackathonIdeaData) => ({
+                url: `hackathons/${hackathonIdeaData.hackathonId}/ideas`,
+                method: 'PUT',
+                body: hackathonIdeaData.data,
+                // Add a JWT token to the request headers if the user is logged in
+                headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: 'HackathonIdeas'}],
+        }),
         deleteHackathonIdea: builder.mutation({
             query: ({hackathonId, ideaId}) => ({
                 url: `hackathons/${hackathonId}/ideas/${ideaId}`,
@@ -41,5 +51,6 @@ export const hackathonIdeaApi = createApi({
 export const {
     useGetHackathonIdeasQuery,
     useCreateHackathonIdeaMutation,
-    useDeleteHackathonIdeaMutation
+    useDeleteHackathonIdeaMutation,
+    useUpdateHackathonIdeaMutation
 } = hackathonIdeaApi;

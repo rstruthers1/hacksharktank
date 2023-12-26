@@ -3,7 +3,12 @@ import { render, waitFor, screen } from '@testing-library/react';
 import { useParams } from 'react-router-dom';
 
 import '@testing-library/jest-dom';
-import { useGetHackathonIdeasQuery, useCreateHackathonIdeaMutation, useDeleteHackathonIdeaMutation } from "../../../apis/hackathonIdeaApi";
+import {
+    useGetHackathonIdeasQuery,
+    useCreateHackathonIdeaMutation,
+    useDeleteHackathonIdeaMutation,
+    useUpdateHackathonIdeaMutation
+} from "../../../apis/hackathonIdeaApi";
 import IdeasPage from './Ideas';
 import { getLoggedInUser } from "../../../utils/authUtils";
 
@@ -16,6 +21,7 @@ jest.mock('../../../apis/hackathonIdeaApi', () => ({
     useGetHackathonIdeasQuery: jest.fn(),
     useCreateHackathonIdeaMutation: jest.fn(),
     useDeleteHackathonIdeaMutation: jest.fn(),
+    useUpdateHackathonIdeaMutation: jest.fn(),
 }));
 
 jest.mock('../../../utils/authUtils', () => ({
@@ -32,6 +38,7 @@ describe('IdeasPage', () => {
         }));
         useCreateHackathonIdeaMutation.mockImplementation(() => [jest.fn()]);
         useDeleteHackathonIdeaMutation.mockImplementation(() => [jest.fn(), { error: null }]);
+        useUpdateHackathonIdeaMutation.mockImplementation(() => [jest.fn(), { error: null }]);
         getLoggedInUser.mockImplementation(() => ({ id: '1' }));
     });
 

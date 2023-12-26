@@ -1,15 +1,18 @@
 import React, {useState} from 'react';
 import {Card} from "react-bootstrap";
-import { MdDelete } from 'react-icons/md';
+import {MdDelete, MdEdit} from 'react-icons/md';
 import {getLoggedInUser} from "../../../utils/authUtils";
 import ConfirmModalDialog from "../../common/ConfirmModalDialog";
 import {useDeleteHackathonIdeaMutation} from "../../../apis/hackathonIdeaApi";
 import {toast} from "react-toastify";
+import EditIdeaModal from "./EditIdeaModal";
 
 const IdeaCard = ({idea}) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteHackathonIdea, {error: deleteHackathonIdeaError}] = useDeleteHackathonIdeaMutation();
     const [ideaToDelete, setIdeaToDelete] = useState(null);
+
+    const [isEditMode, setIsEditMode] = useState(false);
 
     const isDeleteDisabled = () => {
         return !getLoggedInUser() || getLoggedInUser().id !== idea.userId;
@@ -18,7 +21,15 @@ const IdeaCard = ({idea}) => {
     const deleteIconStyle = {
         cursor: isDeleteDisabled() ? 'default' : 'pointer',
         color: isDeleteDisabled() ? '#CCCCCC' : 'black', // Grey color for disabled state
-        float: 'right'
+    };
+
+    const isEditDisabled = () => {
+        return isEditMode || !getLoggedInUser() || getLoggedInUser().id !== idea.userId;
+    }
+
+    const editIconStyle = {
+        cursor: isEditDisabled() ? 'default' : 'pointer',
+        color: isEditDisabled() ? '#CCCCCC' : 'black', // Grey color for disabled state
     };
 
     const deleteConfirmed = async () => {
@@ -45,22 +56,33 @@ const IdeaCard = ({idea}) => {
         setShowDeleteModal(true);
     }
 
+    const handleEditClicked = (ev) => {
+        ev.preventDefault();
+        if (isEditDisabled()) return;
+        setIsEditMode(!isEditMode);
+    }
+
     return (
         <>
-        <Card className="mb-3">
-            <Card.Header>
-                {idea.title}
-                <MdDelete
-                    style={deleteIconStyle}
-                    onClick={handleDeleteClicked}
-                    data-testid="delete-icon"
-                />
-
-            </Card.Header>
-            <Card.Body>
-                <Card.Text dangerouslySetInnerHTML={{ __html: idea.description }} />
-            </Card.Body>
-        </Card>
+            <Card className="mb-3">
+                <Card.Header>
+                    {idea.title}
+                    <span style={{float: 'right'}}> {/* Container for the icons */}
+                        <MdEdit
+                            style={editIconStyle} // Style for edit icon
+                            onClick={handleEditClicked}
+                        />
+                        <MdDelete
+                            style={deleteIconStyle} // Style for delete icon
+                            onClick={handleDeleteClicked}
+                            data-testid="delete-icon"
+                        />
+                    </span>
+                </Card.Header>
+                <Card.Body>
+                    <Card.Text dangerouslySetInnerHTML={{__html: idea.description}}/>
+                </Card.Body>
+            </Card>
             <ConfirmModalDialog
                 show={showDeleteModal}
                 title="Delete Idea"
@@ -71,7 +93,13 @@ const IdeaCard = ({idea}) => {
                 }}
                 confirmLabel='Delete'
                 onCancel={() => setShowDeleteModal(false)}/>
-            </>
+            <EditIdeaModal
+                idea={idea}
+                show={isEditMode}
+                onUpdate={() => setIsEditMode(false)}
+                onCancel={() => setIsEditMode(false)}
+            />
+        </>
     );
 }
 
