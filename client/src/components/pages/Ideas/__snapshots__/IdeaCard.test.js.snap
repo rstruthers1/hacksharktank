@@ -24,9 +24,8 @@ exports[`IdeaCard Component should render correctly 1`] = `
         strokeWidth="0"
         style={
           Object {
-            "color": undefined,
+            "color": "black",
             "cursor": "pointer",
-            "marginRight": "5px",
           }
         }
         viewBox="0 0 24 24"
