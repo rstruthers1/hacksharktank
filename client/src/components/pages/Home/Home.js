@@ -7,7 +7,7 @@ const Home = () => {
 
     return (
         <Container>
-            <h1>Hackathon Junction</h1>
+            <h1>Hack Team Hub</h1>
             {isUserLoggedIn() && loggedInUser &&
                 <>
                     <p>Welcome, {loggedInUser?.email}!</p>

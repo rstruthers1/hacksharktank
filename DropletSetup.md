@@ -277,7 +277,7 @@ sudo certbot --nginx
 1. Enter your email address and agree to the terms of service.
 2. Select all domains listed by hitting enter.
 3. Choose option 2: Secure - Make all requests redirect to secure HTTPS access
-4. Go to your webserver in a browser. You should "Hello World!" displayed.
+4. Go to your webserver in a browser. You should see "Hello World!" displayed.
 
 ## Have pm2 start the app after GitHub action deploys it
 Delete my-app

@@ -96,6 +96,34 @@ hackathonIdeaRouter.route('/hackathons/:hackathonId/ideas').post(authenticateTok
     }
 });
 
+hackathonIdeaRouter.route('/hackathons/:hackathonId/ideas').put(authenticateToken, async (req, res) => {
+    try {
+        const {hackathonId} = req.params;
+        const {title, description, id} = req.body;
+        // Refactor duplicated code into common method
+
+        const authorized = await userIsSiteAdminOrHackathonMember(req, hackathonId);
+
+        if (!authorized)  {
+            res.status(401).json({success: false, message: "Unauthorized"})
+            return;
+        }
+        if (!title || !description) {
+            res.status(400).json({error: 'Title and description are required'});
+            return;
+        }
+
+        const ideaId = parseInt(id);
+        const hackathonIdea = await knex('hackathon_idea')
+            .where({id: ideaId})
+            .update({title, description});
+        res.json(hackathonIdea);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({error: 'Something went wrong', message: err.message});
+    }
+});
+
 
 hackathonIdeaRouter.route('/hackathons/:hackathonId/ideas/:ideaId').delete(authenticateToken, async (req, res) => {
     try {

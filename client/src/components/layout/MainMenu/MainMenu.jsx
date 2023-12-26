@@ -18,7 +18,7 @@ export default function MainMenu() {
         <div>
             <Navbar bg="light" expand="lg">
                 <Container>
-                    <Navbar.Brand as={Link} to="/">Hackathon Junction</Navbar.Brand>
+                    <Navbar.Brand as={Link} to="/">Hack Team Hub</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">

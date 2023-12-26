@@ -5,7 +5,7 @@ const About = () => {
     return (
         <div className="about-hackathon">
             <section className="intro">
-                <h1>About Hackathon Junction</h1>
+                <h1>About Hack Team Hub</h1>
                 <p>Welcome to the hub of innovation and creativity where coders, designers, and innovators come together to solve challenging problems and build amazing projects in a collaborative environment.</p>
             </section>
 

@@ -5,11 +5,14 @@ import {getLoggedInUser} from "../../../utils/authUtils";
 import ConfirmModalDialog from "../../common/ConfirmModalDialog";
 import {useDeleteHackathonIdeaMutation} from "../../../apis/hackathonIdeaApi";
 import {toast} from "react-toastify";
+import EditIdeaModal from "./EditIdeaModal";
 
 const IdeaCard = ({idea}) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteHackathonIdea, {error: deleteHackathonIdeaError}] = useDeleteHackathonIdeaMutation();
     const [ideaToDelete, setIdeaToDelete] = useState(null);
+
+    const [isEditMode, setIsEditMode] = useState(false);
 
     const isDeleteDisabled = () => {
         return !getLoggedInUser() || getLoggedInUser().id !== idea.userId;
@@ -18,6 +21,15 @@ const IdeaCard = ({idea}) => {
     const deleteIconStyle = {
         cursor: isDeleteDisabled() ? 'default' : 'pointer',
         color: isDeleteDisabled() ? '#CCCCCC' : 'black', // Grey color for disabled state
+    };
+
+    const isEditDisabled = () => {
+        return isEditMode || !getLoggedInUser() || getLoggedInUser().id !== idea.userId;
+    }
+
+    const editIconStyle = {
+        cursor: isEditDisabled() ? 'default' : 'pointer',
+        color: isEditDisabled() ? '#CCCCCC' : 'black', // Grey color for disabled state
     };
 
     const deleteConfirmed = async () => {
@@ -46,7 +58,8 @@ const IdeaCard = ({idea}) => {
 
     const handleEditClicked = (ev) => {
         ev.preventDefault();
-
+        if (isEditDisabled()) return;
+        setIsEditMode(!isEditMode);
     }
 
     return (
@@ -56,7 +69,7 @@ const IdeaCard = ({idea}) => {
                     {idea.title}
                     <span style={{float: 'right'}}> {/* Container for the icons */}
                         <MdEdit
-                            style={{cursor: 'pointer', marginRight: '5px'}} // Style for edit icon
+                            style={editIconStyle} // Style for edit icon
                             onClick={handleEditClicked}
                         />
                         <MdDelete
@@ -80,6 +93,12 @@ const IdeaCard = ({idea}) => {
                 }}
                 confirmLabel='Delete'
                 onCancel={() => setShowDeleteModal(false)}/>
+            <EditIdeaModal
+                idea={idea}
+                show={isEditMode}
+                onUpdate={() => setIsEditMode(false)}
+                onCancel={() => setIsEditMode(false)}
+            />
         </>
     );
 }
