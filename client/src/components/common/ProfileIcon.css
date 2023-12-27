@@ -1,0 +1,13 @@
+.profileIcon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #512DA8;
+    font-size: medium;
+    color: #fff;
+    text-align: center;
+    line-height: 30px;
+    float: right !important;
+    margin: 0px;
+    cursor: pointer;
+}
