@@ -152,7 +152,10 @@ userRouter.route('/users/login').post( async (req, res) => {
             return;
         }
         const userRoleNames = userRoles.map(userRole => userRole.name);
-        const token = jwt.sign({id: existingUser.id, roles: userRoleNames, email: existingUser.email},
+        const token = jwt.sign({id: existingUser.id, roles: userRoleNames,
+                email: existingUser.email,
+                firstName: existingUser.firstName,
+                lastName: existingUser.lastName},
             JWT_SECRET,
             {expiresIn: '1h'}
         );

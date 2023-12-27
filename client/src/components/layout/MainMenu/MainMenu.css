@@ -25,3 +25,7 @@
 .topMenu .rightMenuItemLink {
     margin-left: auto;
 }
+
+.custom-dropdown-menu{
+    transform: translate3d(-125px, 35px, 0px)!important;
+}

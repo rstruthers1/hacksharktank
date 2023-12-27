@@ -1,9 +1,11 @@
+import React, {forwardRef} from "react";
 import {Link, Outlet, useNavigate} from "react-router-dom";
 import './MainMenu.css';
 import {isUserAdmin, isUserLoggedIn, logoutUser} from "../../../utils/authUtils";
-import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap'
+import {Navbar, Nav, NavDropdown, Container, Dropdown} from 'react-bootstrap';
+import {LinkContainer} from 'react-router-bootstrap'
 import SessionHandler from "../../pages/Auth/SessionHandler";
+import ProfileIcon from "../../common/ProfileIcon";
 
 
 export default function MainMenu() {
@@ -14,6 +16,39 @@ export default function MainMenu() {
         logoutUser()
         navigate('/login');
     }
+
+    const CustomToggle = forwardRef(({ children, onClick }, ref) => (
+        <a
+            href=""
+            ref={ref}
+            onClick={(e) => {
+                e.preventDefault();
+                onClick(e);
+            }}
+        >
+            <ProfileIcon/>
+            {children}
+
+        </a>
+    ));
+
+    const CustomMenu = forwardRef(
+        ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
+
+            return (
+                <div
+                    ref={ref}
+                    style={style}
+                    className={className}
+                    aria-labelledby={labeledBy}
+                >
+                    <ul className="list-unstyled">
+                        {React.Children.toArray(children)}
+                    </ul>
+                </div>
+            );
+        },
+    );
 
     return (
         <div>
@@ -39,7 +74,15 @@ export default function MainMenu() {
                         </Nav>
                         <Nav>
                             {isUserLoggedIn() ? (
-                                    <Nav.Link  onClick={handleLogout}>Log Out</Nav.Link>
+                                <>
+                                    <Dropdown>
+                                        {/*Got this from https://react-bootstrap.github.io/docs/components/dropdowns/#custom-dropdown-components*/}
+                                        <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components"/>
+                                        <Dropdown.Menu as={CustomMenu} className="custom-dropdown-menu">
+                                            <Dropdown.Item  onClick={handleLogout}>Log Out</Dropdown.Item>
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </>
                             ) : (
                                 <>
                                     <LinkContainer to="/signup">
