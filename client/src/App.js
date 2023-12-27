@@ -15,77 +15,16 @@ import CreateHackathon from "./components/pages/Hackathon/CreateHackathon";
 import ProtectedRoutes from "./routes/ProtectedRoutes";
 import AccessDenied from "./components/pages/Auth/AccessDenied";
 import LoggedOut from "./components/pages/Auth/LoggedOut";
-import {useEffect, useState} from "react";
-import {useIdleTimer} from "react-idle-timer";
-import {isSessionExpired, isUserLoggedIn, logoutUser} from "./utils/authUtils";
 import HackathonList from "./components/pages/HackathonList/HackathonList";
 import HackathonAdminDashboard from "./components/layout/HackathonAdminDashboard/HackathonAdminDashboard";
 import EditHackathon from "./components/pages/Hackathon/EditHackathon";
 import UserManagement from "./components/pages/UserManagement/UserManagement";
-import StayLoggedInPrompt from "./components/pages/Auth/StayLoggedInPrompt";
 import HackathonDashboard from "./components/layout/HackathonDashboard/HackathonDashboard";
 import AboutHackathon from "./components/pages/AboutHackathon/AboutHackathon";
 import Ideas from "./components/pages/Ideas/Ideas";
 
-// set timeout to 1 hour
-const timeout = 3_600_000
-
-// set prompt before idle to 1 minute
-const promptBeforeIdle = 60_000
 
 export function App() {
-    const [stayLoggedInPromptModalOpen, setStayLoggedInPromptModalOpen] = useState(false)
-
-    const onIdle = () => {
-        if (isUserLoggedIn()) {
-            handleLogout();
-        }
-    }
-
-    const onActive = () => {
-       console.log('User is active');
-    }
-
-    const onPrompt = () => {
-        setStayLoggedInPromptModalOpen(true)
-    }
-
-    const { getRemainingTime, activate } = useIdleTimer({
-        onIdle,
-        onActive,
-        onPrompt,
-        timeout,
-        promptBeforeIdle,
-        throttle: 500
-    })
-
-
-    const handleStillHere = () => {
-        setStayLoggedInPromptModalOpen(false);
-        activate()
-    }
-
-    const handleLogout = () => {
-        setStayLoggedInPromptModalOpen(false);
-        if (!isUserLoggedIn()) {
-            return;
-        }
-        logoutUser()
-        window.location.href = '/logged-out';
-    }
-
-
-    useEffect(() => {
-        const checkSessionInterval = setInterval(() => {
-            // Call your session check function
-            if (isSessionExpired()) {
-                handleLogout();
-            }
-        }, 60000); // Check every minute
-
-        // Clear the interval when the component unmounts
-        return () => clearInterval(checkSessionInterval);
-    }, []);
 
 
     const router = createBrowserRouter([
@@ -131,12 +70,6 @@ export function App() {
         <Provider store={store}>
             <RouterProvider router={router}/>
             <ToastContainer/>
-                <StayLoggedInPrompt
-                    show={stayLoggedInPromptModalOpen && isUserLoggedIn()}
-                    handleLogout={handleLogout}
-                    handleStillHere={handleStillHere}
-                    getRemainingTime={getRemainingTime}
-                 />
         </Provider>
     );
 }
