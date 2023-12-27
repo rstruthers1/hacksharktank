@@ -24,6 +24,8 @@ passwordSchema
 // Middleware for validation
 const validateUserInput = [
     body('email').isEmail().withMessage('Invalid email format'),
+    body('firstName').isLength({ min: 1 }).withMessage('First name is required'),
+    body('lastName').isLength({ min: 1 }).withMessage('Last name is required'),
     body('password').custom(value => {
         if (!passwordSchema.validate(value)) {
             throw new Error('Password does not meet complexity requirements.');
@@ -35,7 +37,7 @@ const validateUserInput = [
 
 userRouter.route('/users').get(async (request, response, next) => {
     try {
-        const users = await knex('user').select('id', 'username', 'email')
+        const users = await knex('user').select('id', 'username', 'email', 'firstName', 'lastName')
         response.json(users);
     } catch (err) {
         next(err)
@@ -46,7 +48,7 @@ userRouter.route('/users').get(async (request, response, next) => {
 userRouter.route('/users/search').get(async (request, response, next) => {
     try {
         const searchTerm = request.query.searchTerm;
-        const users = await knex('user').select('id', 'username', 'email')
+        const users = await knex('user').select('id', 'username', 'email', 'firstName', 'lastName')
             .where('email', 'like', `%${searchTerm}%`)
         response.json(users);
     } catch (err) {
@@ -55,7 +57,7 @@ userRouter.route('/users/search').get(async (request, response, next) => {
 });
 
 userRouter.route('/users').post(async (req, res) => {
-    const { email, password, roles } = req.body; // assuming these are passed in the request
+    const { email, password, firstName, lastName, roles } = req.body; // assuming these are passed in the request
 
     try {
 
@@ -87,6 +89,8 @@ userRouter.route('/users').post(async (req, res) => {
             const [userId] = await trx('user').insert({
                 username: email,
                 email,
+                firstName,
+                lastName,
                 password: bcrypt.hashSync(password, HASH_SALT)
             });
 
@@ -105,7 +109,9 @@ userRouter.route('/users').post(async (req, res) => {
         res.json({ success: true, message: "User and roles added successfully", user: {
             id: newUser.id,
                 username: newUser.username,
-                email: newUser.email
+                email: newUser.email,
+                firstName: newUser.firstName,
+                lastName: newUser.lastName
             } });
     } catch (error) {
         console.error(error);

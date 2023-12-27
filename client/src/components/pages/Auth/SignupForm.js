@@ -13,6 +13,8 @@ const SignupForm = () => {
     // Define your validation schema using Yup
     const validationSchema = Yup.object().shape({
         email: Yup.string().required('Email is required').email('Email is invalid'),
+        firstName: Yup.string().required('First Name is required'),
+        lastName: Yup.string().required('Last Name is required'),
         password: Yup.string()
             .required('Password is required')
             .min(8, 'Password must be at least 8 characters long')
@@ -34,6 +36,8 @@ const SignupForm = () => {
         // Handle your form submission here
         const userData = {
             email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName,
             password: data.password,
             roles: ['user']
         };
@@ -49,6 +53,16 @@ const SignupForm = () => {
                     <label htmlFor="email">Email</label>
                     <input name="email" type="email" {...register('email')} />
                     <p className="error">{errors.email?.message}</p>
+                </div>
+                <div className="formField">
+                    <label htmlFor="firstName">First Name</label>
+                    <input name="firstName" type="text" {...register('firstName')} />
+                    <p className="error">{errors.firstName?.message}</p>
+                </div>
+                <div className="formField">
+                    <label htmlFor="lastName">Last Name</label>
+                    <input name="lastName" type="text" {...register('lastName')} />
+                    <p className="error">{errors.lastName?.message}</p>
                 </div>
                 <div className="formField">
                     <label htmlFor="password">Password</label>
