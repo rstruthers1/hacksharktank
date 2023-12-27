@@ -3,6 +3,7 @@ import './MainMenu.css';
 import {isUserAdmin, isUserLoggedIn, logoutUser} from "../../../utils/authUtils";
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap'
+import SessionHandler from "../../pages/Auth/SessionHandler";
 
 
 export default function MainMenu() {
@@ -51,7 +52,9 @@ export default function MainMenu() {
                             )}
                         </Nav>
                     </Navbar.Collapse>
+
                 </Container>
+                <SessionHandler/>
             </Navbar>
             <Outlet/>
         </div>
