@@ -7,6 +7,7 @@ const { body, validationResult } = require('express-validator');
 const PasswordValidator = require('password-validator');
 const jwt = require("jsonwebtoken");
 const authenticateToken = require("../middleware/auth");
+const {isLoggedInUserId} = require("../utils/authUtils");
 
 
 
@@ -32,6 +33,11 @@ const validateUserInput = [
         }
         return true;
     })
+];
+
+validateProfileInput = [
+    body('firstName').isLength({ min: 1 }).withMessage('First name is required'),
+    body('lastName').isLength({ min: 1 }).withMessage('Last name is required'),
 ];
 
 
@@ -119,6 +125,78 @@ userRouter.route('/users').post(async (req, res) => {
     }
 })
 
+userRouter.route('/users/:id').get(authenticateToken, async (req, res) => {
+    if (!isLoggedInUserId(req, req.params.id)) {
+        res.status(401).json({ success: false, message: "Unauthorized" })
+        return;
+    }
+
+    try {
+        const user = await knex('user')
+            .where('id', req.params.id)
+            .select('id', 'username', 'email', 'firstName', 'lastName')
+            .first();
+        res.json(user);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Error getting user", error: error });
+    }
+});
+
+userRouter.route('/users/:id').put(authenticateToken, async (req, res) => {
+    const id = req.params.id;
+    if (!isLoggedInUserId(req, id)) {
+        res.status(401).json({ success: false, message: "Unauthorized" })
+        return;
+    }
+    const { firstName, lastName} = req.body;
+
+    try {
+
+        const existingUser = await knex('user')
+            .where('id', id)
+            .first();
+
+        if (!existingUser) {
+            res.status(400).json({ success: false, message: "User does not exist." })
+            return;
+        }
+
+        // Perform validation after checking uniqueness
+        await Promise.all(validateProfileInput.map(validation => validation.run(req)));
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+
+
+        await knex.transaction(async trx => {
+            await trx('user')
+                .where('id', id)
+                .update({
+                    firstName,
+                    lastName
+                });
+        });
+
+        const updatedUser = await knex('user')
+            .where('id', id)
+            .first();
+        res.json({ success: true, message: "User and roles updated successfully", user: {
+                id: updatedUser.id,
+                username: updatedUser.username,
+                email: updatedUser.email,
+                firstName: updatedUser.firstName,
+                lastName: updatedUser.lastName
+            } });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Error updating user", error: error });
+    }
+
+});
+
 userRouter.route('/users/login').post( async (req, res) => {
     try {
         const {email, password} = req.body;
@@ -153,9 +231,7 @@ userRouter.route('/users/login').post( async (req, res) => {
         }
         const userRoleNames = userRoles.map(userRole => userRole.name);
         const token = jwt.sign({id: existingUser.id, roles: userRoleNames,
-                email: existingUser.email,
-                firstName: existingUser.firstName,
-                lastName: existingUser.lastName},
+                email: existingUser.email},
             JWT_SECRET,
             {expiresIn: '1h'}
         );

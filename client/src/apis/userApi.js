@@ -28,9 +28,34 @@ export const userApi = createApi({
                 method: 'GET',
             }),
         }),
+        getUser: builder.query({
+            query: (userId) => ({
+                url: `users/${userId}`,
+                method: 'GET',
+                // Add a JWT token to the request headers if the user is logged in
+                headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
+            }),
+            providesTags: (result, error, arg) => [{ type: 'User', id: arg }],
+        }),
+        updateUser: builder.mutation({
+            query: (userData) => ({
+                url: `users/${userData.id}`,
+                method: 'PUT',
+                body: userData,
+                // Add a JWT token to the request headers if the user is logged in
+                headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: 'User', id: arg.id }],
+        }),
         // You can add more endpoints here
     }),
 });
 
 // Export the auto-generated hook for the `registerUser` and `loginUser` mutation
-export const { useRegisterUserMutation, useLoginUserMutation, useLazySearchUsersQuery } = userApi;
+export const {
+    useRegisterUserMutation,
+    useLoginUserMutation,
+    useLazySearchUsersQuery,
+    useGetUserQuery,
+    useUpdateUserMutation
+} = userApi;
