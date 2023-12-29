@@ -5,7 +5,7 @@ import {isUserAdmin, isUserLoggedIn, logoutUser} from "../../../utils/authUtils"
 import {Navbar, Nav, NavDropdown, Container, Dropdown} from 'react-bootstrap';
 import {LinkContainer} from 'react-router-bootstrap'
 import SessionHandler from "../../pages/Auth/SessionHandler";
-import ProfileIcon from "../../common/ProfileIcon";
+import ProfileIcon from "../../pages/UserProfile/ProfileIcon";
 
 
 export default function MainMenu() {
@@ -79,6 +79,7 @@ export default function MainMenu() {
                                         {/*Got this from https://react-bootstrap.github.io/docs/components/dropdowns/#custom-dropdown-components*/}
                                         <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components"/>
                                         <Dropdown.Menu as={CustomMenu} className="custom-dropdown-menu">
+                                            <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
                                             <Dropdown.Item  onClick={handleLogout}>Log Out</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>

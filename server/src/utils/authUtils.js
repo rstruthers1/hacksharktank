@@ -38,8 +38,25 @@ const userIsSiteAdminOrHasHackathonRole = async (req, hackathonId, roles) => {
     return isSiteAdminOrHasHackathonRole;
 }
 
+const isLoggedInUserId = (req, userId) => {
+    let userIdInt;
+    if (typeof userId === 'string') {
+        try {
+            userIdInt = parseInt(userId);
+        } catch (e) {
+            console.error(`Error parsing userId: ${userId}`);
+            return false;
+        }
+    } else {
+        userIdInt = userId;
+    }
+
+    return req?.user?.id === userIdInt;
+}
+
 // make visible to other files
 module.exports = {
     userIsSiteAdminOrHackathonMember,
-    userIsSiteAdminOrHasHackathonRole
+    userIsSiteAdminOrHasHackathonRole,
+    isLoggedInUserId
 }
