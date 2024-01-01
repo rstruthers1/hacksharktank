@@ -28,6 +28,11 @@ describe('<ChangePassword />', () => {
         getLoggedInUser.mockReturnValue({ id: '123' });
     });
 
+    it('should render correctly', () => {
+        const { container } = render(<ChangePassword />);
+        expect(container).toMatchSnapshot();
+    });
+
     it('renders the change password form', () => {
         render(<ChangePassword />);
         expect(screen.getByLabelText(/Old Password/i)).toBeInTheDocument();
