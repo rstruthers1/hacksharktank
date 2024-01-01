@@ -23,6 +23,7 @@ import HackathonDashboard from "./components/layout/HackathonDashboard/Hackathon
 import AboutHackathon from "./components/pages/AboutHackathon/AboutHackathon";
 import Ideas from "./components/pages/Ideas/Ideas";
 import UserProfile from "./components/pages/UserProfile/UserProfile";
+import ChangePassword from "./components/pages/Auth/ChangePassword";
 
 
 export function App() {
@@ -68,7 +69,8 @@ export function App() {
         {
             element: <ProtectedRoutes onlyAdmin={false}/>,
             children: [
-                {path: "/profile", element: <UserProfile/>}
+                {path: "/profile", element: <UserProfile/>},
+                {path: "/change-password", element: <ChangePassword/>}
             ]
         }
 

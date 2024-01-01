@@ -34,7 +34,6 @@ export default function MainMenu() {
 
     const CustomMenu = forwardRef(
         ({ children, style, className, 'aria-labelledby': labeledBy }, ref) => {
-
             return (
                 <div
                     ref={ref}
@@ -42,7 +41,7 @@ export default function MainMenu() {
                     className={className}
                     aria-labelledby={labeledBy}
                 >
-                    <ul className="list-unstyled">
+                    <ul className="list-unstyled" style={{marginBottom: "2px"}}>
                         {React.Children.toArray(children)}
                     </ul>
                 </div>
@@ -80,6 +79,8 @@ export default function MainMenu() {
                                         <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components"/>
                                         <Dropdown.Menu as={CustomMenu} className="custom-dropdown-menu">
                                             <Dropdown.Item as={Link} to="/profile">Profile</Dropdown.Item>
+                                            <Dropdown.Item as={Link} to="/change-password">Change Password</Dropdown.Item>
+                                            <Dropdown.Divider />
                                             <Dropdown.Item  onClick={handleLogout}>Log Out</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
