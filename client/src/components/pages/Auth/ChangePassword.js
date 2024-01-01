@@ -46,7 +46,7 @@ const ChangePassword = () => {
       <Container>
         <h2>Change Password</h2>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Form.Group>
+          <Form.Group controlId="oldPassword">
             <Form.Label>Old Password</Form.Label>
             <Controller
                 name="oldPassword"
@@ -58,7 +58,7 @@ const ChangePassword = () => {
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group>
+          <Form.Group controlId="newPassword">
             <Form.Label>New Password</Form.Label>
             <Controller
                 name="newPassword"
@@ -70,7 +70,7 @@ const ChangePassword = () => {
             </Form.Control.Feedback>
           </Form.Group>
 
-          <Form.Group>
+          <Form.Group controlId="confirmNewPassword">
             <Form.Label>Confirm New Password</Form.Label>
             <Controller
                 name="confirmNewPassword"
