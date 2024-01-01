@@ -47,6 +47,16 @@ export const userApi = createApi({
             }),
             invalidatesTags: (result, error, arg) => [{ type: 'User', id: arg.id }],
         }),
+        changePassword: builder.mutation({
+            query: (userData) => ({
+                url: `users/${userData.id}/change-password`,
+                method: 'PUT',
+                body: userData,
+                // Add a JWT token to the request headers if the user is logged in
+                headers: { 'Authorization': `JWT ${localStorage.getItem('token')}` },
+            }),
+            invalidatesTags: (result, error, arg) => [{ type: 'User', id: arg.id }],
+        }),
         // You can add more endpoints here
     }),
 });
@@ -57,5 +67,6 @@ export const {
     useLoginUserMutation,
     useLazySearchUsersQuery,
     useGetUserQuery,
-    useUpdateUserMutation
+    useUpdateUserMutation,
+    useChangePasswordMutation,
 } = userApi;

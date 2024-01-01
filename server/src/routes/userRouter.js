@@ -242,8 +242,46 @@ userRouter.route('/users/login').post( async (req, res) => {
     }
 })
 
+userRouter.route('/users/:id/change-password').put(authenticateToken, async (req, res) => {
+    const id = req.params.id;
+    if (!isLoggedInUserId(req, id)) {
+        res.status(401).json({ success: false, message: "Unauthorized" })
+        return;
+    }
+    const { oldPassword, newPassword } = req.body;
+    try {
+        const existingUser = await knex('user')
+            .where('id', id)
+            .first();
+        if (!existingUser) {
+            res.status(400).json({success: false, message: "User does not exist"})
+            return;
+        }
 
-userRouter.route('/users/reset-password').post(authenticateToken, async (req, res) => {
+        const oldPasswordMatches = bcrypt.compareSync(oldPassword, existingUser.password, HASH_SALT);
+        if (!oldPasswordMatches) {
+            res.status(400).json({success: false, message: "Invalid old password"})
+            return;
+        }
+
+        if (!passwordSchema.validate(newPassword)) {
+            res.status(400).json({success: false, message: "Password does not meet complexity requirements."})
+            return;
+        }
+
+        await knex('user')
+            .where('id', id)
+            .update({password: bcrypt.hashSync(newPassword, HASH_SALT)});
+        res.json({success: true, message: "Password changed successfully"});
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "Error changing password", error: error });
+
+    }
+});
+
+userRouter.route('/users/admin-reset-password').post(authenticateToken, async (req, res) => {
 
     try {
 
