@@ -80,7 +80,13 @@ const IdeaCard = ({idea}) => {
                     </span>
                 </Card.Header>
                 <Card.Body>
-                    <Card.Text dangerouslySetInnerHTML={{__html: idea.description}}/>
+                    <div className="quill">
+                        <div className="ql-container ql-snow" style={{border: "none"}}>
+                            <div className="ql-editor" style={{padding: "0px"}}>
+                                <Card.Text style={{padding: "0px"}} dangerouslySetInnerHTML={{__html: idea.description}}/>
+                            </div>
+                        </div>
+                    </div>
                 </Card.Body>
             </Card>
             <ConfirmModalDialog
