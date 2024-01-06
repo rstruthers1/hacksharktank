@@ -70,14 +70,41 @@ exports[`IdeaCard Component should render correctly 1`] = `
   <div
     className="card-body"
   >
-    <p
-      className="card-text"
-      dangerouslySetInnerHTML={
-        Object {
-          "__html": "<p>Test Description</p>",
+    <div
+      className="quill"
+    >
+      <div
+        className="ql-container ql-snow"
+        style={
+          Object {
+            "border": "none",
+          }
         }
-      }
-    />
+      >
+        <div
+          className="ql-editor"
+          style={
+            Object {
+              "padding": "0px",
+            }
+          }
+        >
+          <p
+            className="card-text"
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Test Description</p>",
+              }
+            }
+            style={
+              Object {
+                "padding": "0px",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;
