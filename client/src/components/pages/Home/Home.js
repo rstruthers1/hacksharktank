@@ -1,6 +1,7 @@
 import {Alert, Button, Card, Col, Container, ListGroup, Row} from "react-bootstrap";
 import UsersHackathonList from "../HackathonList/UsersHackathonList";
 import {getLoggedInUser, isUserLoggedIn} from "../../../utils/authUtils";
+import {Link} from "react-router-dom";
 
 const Home = () => {
     const loggedInUser = getLoggedInUser();
@@ -55,7 +56,15 @@ const Home = () => {
                         Ready to join the exclusive world of Hack Team Hub? Sign up, stay tuned for your invitations, and embark on a unique hackathon journey!
                     </p>
 
-                    <Button variant="primary">Sign Up Now</Button> <Button variant="secondary">Login</Button>
+                    <div className="mt-4">
+                        <Link to="/signup">
+                            <Button variant="primary">Sign Up</Button>
+                        </Link>
+                        {' '}
+                        <Link to="/login">
+                            <Button variant="secondary">Login</Button>
+                        </Link>
+                    </div>
                 </>
             )}
         </Container>
