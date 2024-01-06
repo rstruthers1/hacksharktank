@@ -2,7 +2,7 @@ import React, {forwardRef} from "react";
 import {Link, Outlet, useNavigate} from "react-router-dom";
 import './MainMenu.css';
 import {isUserAdmin, isUserLoggedIn, logoutUser} from "../../../utils/authUtils";
-import {Navbar, Nav, NavDropdown, Container, Dropdown} from 'react-bootstrap';
+import {Navbar, Nav, NavDropdown, Container, Dropdown, Alert} from 'react-bootstrap';
 import {LinkContainer} from 'react-router-bootstrap'
 import SessionHandler from "../../pages/Auth/SessionHandler";
 import ProfileIcon from "../../pages/UserProfile/ProfileIcon";
@@ -101,6 +101,9 @@ export default function MainMenu() {
                 </Container>
                 <SessionHandler/>
             </Navbar>
+            <Alert variant="warning">
+                <b>Warning:</b> This platform is currently a coding exercise and not open for actual business. All features and functionalities are demonstrations for development purposes.
+            </Alert>
             <Outlet/>
         </div>
     )

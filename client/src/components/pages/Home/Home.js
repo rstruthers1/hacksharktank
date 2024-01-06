@@ -1,4 +1,4 @@
-import {Alert, Button, Card, Col, Container, ListGroup, Row} from "react-bootstrap";
+import {Button, Card, Col, Container, ListGroup, Row} from "react-bootstrap";
 import UsersHackathonList from "../HackathonList/UsersHackathonList";
 import {getLoggedInUser, isUserLoggedIn} from "../../../utils/authUtils";
 import {Link} from "react-router-dom";
@@ -9,9 +9,6 @@ const Home = () => {
     return (
         <Container>
             <h1>Hack Team Hub</h1>
-            <Alert variant="info">
-                <b>Note:</b> This platform is currently a coding exercise and not open for actual business. All features and functionalities are demonstrations for development purposes.
-            </Alert>
             {isUserLoggedIn() && loggedInUser ? (
                 <>
                     <p>Welcome, {loggedInUser?.email}!</p>
