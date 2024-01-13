@@ -101,9 +101,12 @@ export default function MainMenu() {
                 </Container>
                 <SessionHandler/>
             </Navbar>
-            <Alert variant="warning">
-                <b>Warning:</b> This platform is currently a coding exercise and not open for actual business. All features and functionalities are demonstrations for development purposes.
-            </Alert>
+            {process.env.REACT_APP_HIDE_WARNING_BANNER === 'true' ? null :
+                <Alert variant="warning">
+                    <b>Warning:</b> This platform is currently a coding exercise and not open for actual business. All features and functionalities are demonstrations for development purposes.
+                </Alert>
+            }
+
             <Outlet/>
         </div>
     )
